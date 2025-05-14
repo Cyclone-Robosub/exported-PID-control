@@ -20,6 +20,7 @@
 //
 #include <stdio.h>              // This example main program uses printf/fflush
 #include "controller_codegenTest.h"    // Model header file
+#include <iostream>
 
 static controller_codegenTest rtObj;   // Instance of model class
 
@@ -52,12 +53,19 @@ void rt_OneStep(void)
   // Save FPU context here (if necessary)
   // Re-enable timer or interrupt here
   // Set model inputs here
+  rtObj.rtU.state_error[0] = 1.0;
+  rtObj.rtU.state_error[1] = 1.0;
+  rtObj.rtU.state_error[2] = 1.0;
+  rtObj.rtU.state_error[3] = 1.0;
+  rtObj.rtU.state_error[4] = 1.0;
+  rtObj.rtU.state_error[5] = 1.0;
 
   // Step the model
   rtObj.step();
 
   // Get model outputs here
-
+  std::cout << rtObj.rtY.PWM[0];
+  //print outputs
   // Indicate task complete
   OverrunFlag = false;
 
