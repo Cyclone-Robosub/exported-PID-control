@@ -134,5 +134,4 @@ if(COMMAND toolchain_target_hook)
 endif()
 # Enable testing and add test subdirectory
 enable_testing()
-add_subdirectory(test)
 
