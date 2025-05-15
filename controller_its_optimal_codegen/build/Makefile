@@ -139,32 +139,6 @@ controller_codegenTest/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/controller_codegenTest.dir/build.make CMakeFiles/controller_codegenTest.dir/build
 .PHONY : controller_codegenTest/fast
 
-#=============================================================================
-# Target rules for targets named controller_test
-
-# Build rule for target.
-controller_test: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 controller_test
-.PHONY : controller_test
-
-# fast build rule for target.
-controller_test/fast:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_test.dir/build.make test/CMakeFiles/controller_test.dir/build
-.PHONY : controller_test/fast
-
-#=============================================================================
-# Target rules for targets named controller_simulation
-
-# Build rule for target.
-controller_simulation: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 controller_simulation
-.PHONY : controller_simulation
-
-# fast build rule for target.
-controller_simulation/fast:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_simulation.dir/build.make test/CMakeFiles/controller_simulation.dir/build
-.PHONY : controller_simulation/fast
-
 controller_codegenTest.o: controller_codegenTest.cpp.o
 .PHONY : controller_codegenTest.o
 
@@ -247,8 +221,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... controller_codegenTest"
-	@echo "... controller_simulation"
-	@echo "... controller_test"
 	@echo "... controller_codegenTest.o"
 	@echo "... controller_codegenTest.i"
 	@echo "... controller_codegenTest.s"

@@ -64,34 +64,15 @@ CMAKE_BINARY_DIR = /home/zenyn/exported-PID-control/controller_its_optimal_codeg
 
 # The main recursive "all" target.
 all: CMakeFiles/controller_codegenTest.dir/all
-all: test/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall: test/preinstall
+preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: CMakeFiles/controller_codegenTest.dir/clean
-clean: test/clean
 .PHONY : clean
-
-#=============================================================================
-# Directory level rules for directory test
-
-# Recursive "all" directory target.
-test/all: test/CMakeFiles/controller_test.dir/all
-test/all: test/CMakeFiles/controller_simulation.dir/all
-.PHONY : test/all
-
-# Recursive "preinstall" directory target.
-test/preinstall:
-.PHONY : test/preinstall
-
-# Recursive "clean" directory target.
-test/clean: test/CMakeFiles/controller_test.dir/clean
-test/clean: test/CMakeFiles/controller_simulation.dir/clean
-.PHONY : test/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/controller_codegenTest.dir
@@ -118,58 +99,6 @@ controller_codegenTest: CMakeFiles/controller_codegenTest.dir/rule
 CMakeFiles/controller_codegenTest.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/controller_codegenTest.dir/build.make CMakeFiles/controller_codegenTest.dir/clean
 .PHONY : CMakeFiles/controller_codegenTest.dir/clean
-
-#=============================================================================
-# Target rules for target test/CMakeFiles/controller_test.dir
-
-# All Build rule for target.
-test/CMakeFiles/controller_test.dir/all:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_test.dir/build.make test/CMakeFiles/controller_test.dir/depend
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_test.dir/build.make test/CMakeFiles/controller_test.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles --progress-num=9,10,11,12 "Built target controller_test"
-.PHONY : test/CMakeFiles/controller_test.dir/all
-
-# Build rule for subdir invocation for target.
-test/CMakeFiles/controller_test.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/controller_test.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles 0
-.PHONY : test/CMakeFiles/controller_test.dir/rule
-
-# Convenience name for target.
-controller_test: test/CMakeFiles/controller_test.dir/rule
-.PHONY : controller_test
-
-# clean rule for target.
-test/CMakeFiles/controller_test.dir/clean:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_test.dir/build.make test/CMakeFiles/controller_test.dir/clean
-.PHONY : test/CMakeFiles/controller_test.dir/clean
-
-#=============================================================================
-# Target rules for target test/CMakeFiles/controller_simulation.dir
-
-# All Build rule for target.
-test/CMakeFiles/controller_simulation.dir/all:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_simulation.dir/build.make test/CMakeFiles/controller_simulation.dir/depend
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_simulation.dir/build.make test/CMakeFiles/controller_simulation.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles --progress-num=5,6,7,8 "Built target controller_simulation"
-.PHONY : test/CMakeFiles/controller_simulation.dir/all
-
-# Build rule for subdir invocation for target.
-test/CMakeFiles/controller_simulation.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test/CMakeFiles/controller_simulation.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/zenyn/exported-PID-control/controller_its_optimal_codegen/build/CMakeFiles 0
-.PHONY : test/CMakeFiles/controller_simulation.dir/rule
-
-# Convenience name for target.
-controller_simulation: test/CMakeFiles/controller_simulation.dir/rule
-.PHONY : controller_simulation
-
-# clean rule for target.
-test/CMakeFiles/controller_simulation.dir/clean:
-	$(MAKE) $(MAKESILENT) -f test/CMakeFiles/controller_simulation.dir/build.make test/CMakeFiles/controller_simulation.dir/clean
-.PHONY : test/CMakeFiles/controller_simulation.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
