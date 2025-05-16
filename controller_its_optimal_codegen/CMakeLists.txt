@@ -21,13 +21,23 @@ set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT controller_codegenTest)
 ## Path variables
 ###########################################################################
 # Derive an absolute path to the code generation anchor folder.
-get_filename_component(START_DIR .. ABSOLUTE)
+get_filename_component(START_DIR . ABSOLUTE)
 
 # Special directories defined by using CACHE variables can be overridden 
 # by setting the variable from the command line, e.g.,
 # 
 # 	cmake . -DMATLAB_ROOT=/path/to/another/matlab/root
-set(MATLAB_ROOT C:/Program\ Files/MATLAB/R2024a CACHE PATH "")
+
+# Include MATLAB directories - check for Linux installation paths first
+if(EXISTS "/usr/local/MATLAB/R2024a")
+    set(MATLAB_ROOT "/usr/local/MATLAB/R2024a" CACHE PATH "")
+elseif(EXISTS "/usr/local/MATLAB/R2023b")
+    set(MATLAB_ROOT "/usr/local/MATLAB/R2023b" CACHE PATH "")
+elseif(EXISTS "/usr/local/MATLAB/R2023a")
+    set(MATLAB_ROOT "/usr/local/MATLAB/R2023a" CACHE PATH "")
+else()
+    set(MATLAB_ROOT C:/Program\ Files/MATLAB/R2024a CACHE PATH "")
+endif()
 
 # Additional variables that are defined conditionally.
 if("${CMAKE_CURRENT_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -46,9 +56,9 @@ find_library(FOUND_LIBM m NO_SYSTEM_ENVIRONMENT_PATH PATHS ${CMAKE_C_IMPLICIT_LI
 ###########################################################################
 
 # Definition of target "controller_codegenTest".
-add_executable(controller_codegenTest  ${START_DIR}/controller_codegenTest_ert_rtw/controller_codegenTest.cpp
-    ${START_DIR}/controller_codegenTest_ert_rtw/controller_codegenTest_data.cpp
-    ${START_DIR}/controller_codegenTest_ert_rtw/ert_main.cpp)
+add_executable(controller_codegenTest  ${START_DIR}/controller_codegenTest.cpp
+    ${START_DIR}/controller_codegenTest_data.cpp
+    ${START_DIR}/ert_main.cpp)
 
 # Set properties for target "controller_codegenTest".
 set_target_properties(controller_codegenTest PROPERTIES PREFIX ""
@@ -79,7 +89,6 @@ target_compile_definitions(controller_codegenTest PRIVATE -DMODEL=controller_cod
 
 # Specify include directories for target "controller_codegenTest".
 target_include_directories(controller_codegenTest PRIVATE ${START_DIR}
-    ${START_DIR}/controller_codegenTest_ert_rtw
     ${MATLAB_ROOT}/extern/include
     ${MATLAB_ROOT}/simulink/include
     ${MATLAB_ROOT}/rtw/c/src
@@ -123,3 +132,6 @@ add_custom_command(TARGET controller_codegenTest POST_BUILD
 if(COMMAND toolchain_target_hook)
     toolchain_target_hook(controller_codegenTest)
 endif()
+# Enable testing and add test subdirectory
+enable_testing()
+
