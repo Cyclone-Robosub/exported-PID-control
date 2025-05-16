@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+Dont add pointless comment like 
+
+// this is a main block
+int main(){
+
+}
