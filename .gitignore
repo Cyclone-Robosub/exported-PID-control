@@ -1,54 +1,29 @@
+# Build directory
 build/
-*/build/
-**/cmake-build-*/
 
+# Generated files
 CMakeCache.txt
 CMakeFiles/
-CMakeScripts/
-Testing/
-Makefile
 cmake_install.cmake
-install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
-_deps/
+Makefile
 
-*.slo
-*.lo
+# Compiled files
 *.o
 *.obj
-
-*.gch
-*.pch
-
 *.so
-*.dylib
-*.dll
-
-*.lai
-*.la
 *.a
-*.lib
-
 *.exe
-*.out
-*.app
 
-*.mat
-*.mex*
-*.p
-*.slxc
-slprj/
-
-.vscode/
-.idea/
+# Editor files
 *.swp
 *.swo
 
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db 
+
+*/build/
+**/cmake-build-*/
+
+CMakeScripts/
+Testing/
+
