@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "../src/controller_codegenTest.h"
 
+
+// fixture not currently being used. Destroy?
 class ControllerTest : public ::testing::Test {
 protected:
     void SetUp() override {
@@ -16,8 +18,7 @@ protected:
 TEST_F(ControllerTest, CanBeInitialized) 
 {
     controller_codegenTest controller;
-    controller.initialize();
-    SUCCEED();
+    ASSERT_NO_THROW(controller.initialize());
 }
 
 // Test 2: Check that input can be set          
@@ -32,7 +33,7 @@ TEST_F(ControllerTest, InputCanBeSet)
     controller.rtU.Input[4] = 0.0;
     controller.rtU.Input[5] = 0.0;
 
-    controller.step();
+    ASSERT_NO_THROW(controller.step());
 }   
 
 // Test 3: Check that when all errors are zero, all outputs equal 1500
