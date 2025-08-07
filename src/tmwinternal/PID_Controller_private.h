@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 1.2
-// Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
-// C/C++ source code generated on : Fri May 30 20:48:22 2025
+// Model version                  : 4.0
+// Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
+// C/C++ source code generated on : Thu Aug  7 00:14:38 2025
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)

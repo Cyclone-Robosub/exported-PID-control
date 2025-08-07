@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 1.2
-// Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
-// C/C++ source code generated on : Fri May 30 20:48:22 2025
+// Model version                  : 4.0
+// Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
+// C/C++ source code generated on : Thu Aug  7 00:14:38 2025
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -41,7 +41,7 @@ void rt_OneStep(void)
 
   // Check for overrun
   if (OverrunFlag) {
-    rtmSetErrorStatus(PID_Controller_Obj.getRTM(), "Overrun");
+    PID_Controller_Obj.getRTM()->setErrorStatus("Overrun");
     return;
   }
 
@@ -89,7 +89,7 @@ int_T main(int_T argc, const char *argv[])
          "Generated ERT main won't simulate model step behavior. "
          "To change this behavior select the 'MAT-file logging' option.\n");
   fflush((nullptr));
-  while (rtmGetErrorStatus(PID_Controller_Obj.getRTM()) == (nullptr)) {
+  while (PID_Controller_Obj.getRTM()->getErrorStatus() == (nullptr)) {
     //  Perform application tasks here
   }
 

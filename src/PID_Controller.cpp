@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 1.2
-// Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
-// C/C++ source code generated on : Fri May 30 20:48:22 2025
+// Model version                  : 4.0
+// Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
+// C/C++ source code generated on : Thu Aug  7 00:14:38 2025
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: Intel->x86-64 (Windows64)
@@ -72,182 +72,227 @@ real_T rt_powd_snf(real_T u0, real_T u1)
 // Model step function
 void PID_Controller::step()
 {
-  __m128d tmp_0;
   real_T tmp[6];
-  real_T rtb_FilterCoefficient_4;
-  real_T rtb_FilterCoefficient_c;
+  real_T rtb_DeadZone;
+  real_T rtb_DeadZone_n;
+  real_T rtb_FilterCoefficient_3;
+  real_T rtb_FilterCoefficient_b;
   real_T rtb_FilterCoefficient_idx_0;
   real_T rtb_FilterCoefficient_idx_1;
-  real_T rtb_FilterCoefficient_o;
-  real_T rtb_FilterCoefficient_oz;
+  real_T rtb_FilterCoefficient_k;
+  real_T rtb_FilterCoefficient_n;
+  real_T rtb_corrected_error;
   real_T u0;
   real_T u0_0;
   real_T u0_1;
-  real_T u0_2;
-  real_T u0_3;
   real_T y;
   int32_T i;
   int32_T i_0;
+  int8_T tmp_0;
+  int8_T tmp_1;
 
-  // Outputs for Atomic SubSystem: '<Root>/Controller'
-  // Gain: '<S46>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S38>/Filter'
-  //   Gain: '<S36>/Derivative Gain'
-  //   Sum: '<S38>/SumD'
+  // Outputs for Atomic SubSystem: '<Root>/Controller1'
+  // Gain: '<S49>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S41>/Filter'
+  //   Gain: '<S39>/Derivative Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S41>/SumD'
 
-  rtb_FilterCoefficient_c = (0.0 - PID_Controller_DW.Filter_DSTATE_d) * 54.54;
+  rtb_FilterCoefficient_n = (2.504 * PID_Controller_U.state_error_e[3] -
+    PID_Controller_DW.Filter_DSTATE_c) * 54.54;
 
-  // Gain: '<S96>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S88>/Filter'
-  //   Gain: '<S86>/Derivative Gain'
-  //   Sum: '<S88>/SumD'
+  // Sum: '<S55>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S46>/Integrator'
+  //   Gain: '<S51>/Proportional Gain'
+  //   Inport: '<Root>/state_error_e'
 
-  rtb_FilterCoefficient_oz = (0.0 - PID_Controller_DW.Filter_DSTATE_c) * 54.54;
+  rtb_DeadZone = (4.773 * PID_Controller_U.state_error_e[3] +
+                  PID_Controller_DW.Integrator_DSTATE_n) +
+    rtb_FilterCoefficient_n;
 
-  // Gain: '<S146>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S138>/Filter'
-  //   Gain: '<S136>/Derivative Gain'
-  //   Sum: '<S138>/SumD'
+  // Gain: '<S103>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S95>/Filter'
+  //   Gain: '<S93>/Derivative Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S95>/SumD'
 
-  rtb_FilterCoefficient_o = (0.0 - PID_Controller_DW.Filter_DSTATE_h) * 1142.828;
+  rtb_FilterCoefficient_b = (3.625 * PID_Controller_U.state_error_e[4] -
+    PID_Controller_DW.Filter_DSTATE_l) * 54.54;
 
-  // Gain: '<S196>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S188>/Filter'
-  //   Gain: '<S186>/Derivative Gain'
-  //   Sum: '<S188>/SumD'
+  // Sum: '<S109>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S100>/Integrator'
+  //   Gain: '<S105>/Proportional Gain'
+  //   Inport: '<Root>/state_error_e'
 
-  rtb_FilterCoefficient_4 = (0.0 - PID_Controller_DW.Filter_DSTATE[0]) *
-    17.2469682941307;
-  rtb_FilterCoefficient_idx_0 = rtb_FilterCoefficient_4;
+  rtb_DeadZone_n = (6.912 * PID_Controller_U.state_error_e[4] +
+                    PID_Controller_DW.Integrator_DSTATE_p) +
+    rtb_FilterCoefficient_b;
 
-  // Saturate: '<S200>/Saturation' incorporates:
-  //   DiscreteIntegrator: '<S193>/Integrator'
-  //   Gain: '<S196>/Filter Coefficient'
-  //   Sum: '<S202>/Sum'
+  // MATLAB Function: '<S2>/Yaw Overshoot Corrector' incorporates:
+  //   Inport: '<Root>/state_error_e'
 
-  y = PID_Controller_DW.Integrator_DSTATE[0] + rtb_FilterCoefficient_4;
+  if (PID_Controller_U.state_error_e[5] > 1.5707963267948966) {
+    rtb_corrected_error = PID_Controller_U.state_error_e[5] - 6.2831853071795862;
+  } else if (PID_Controller_U.state_error_e[5] < -1.5707963267948966) {
+    rtb_corrected_error = PID_Controller_U.state_error_e[5] + 6.2831853071795862;
+  } else {
+    rtb_corrected_error = PID_Controller_U.state_error_e[5];
+  }
+
+  // End of MATLAB Function: '<S2>/Yaw Overshoot Corrector'
+
+  // Gain: '<S155>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S147>/Filter'
+  //   Gain: '<S145>/Derivative Gain'
+  //   Sum: '<S147>/SumD'
+
+  rtb_FilterCoefficient_k = (2.957 * rtb_corrected_error -
+    PID_Controller_DW.Filter_DSTATE_f) * 114.828;
+
+  // Gain: '<S207>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S199>/Filter'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S199>/SumD'
+
+  rtb_FilterCoefficient_3 = (30.7980856287723 * PID_Controller_U.state_error_e[0]
+    - PID_Controller_DW.Filter_DSTATE[0]) * 17.2469682941307;
+  rtb_FilterCoefficient_idx_0 = rtb_FilterCoefficient_3;
+
+  // Saturate: '<S211>/Saturation' incorporates:
+  //   DiscreteIntegrator: '<S204>/Integrator'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Gain: '<S207>/Filter Coefficient'
+  //   Gain: '<S209>/Proportional Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S213>/Sum'
+
+  y = (18.567926327114 * PID_Controller_U.state_error_e[0] +
+       PID_Controller_DW.Integrator_DSTATE[0]) + rtb_FilterCoefficient_3;
   if (y > 120.0) {
     y = 120.0;
   } else if (y < -120.0) {
     y = -120.0;
   }
 
-  // Gain: '<S196>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S188>/Filter'
-  //   Gain: '<S186>/Derivative Gain'
-  //   Sum: '<S188>/SumD'
+  // Gain: '<S207>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S199>/Filter'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S199>/SumD'
 
-  rtb_FilterCoefficient_4 = (0.0 - PID_Controller_DW.Filter_DSTATE[1]) *
-    17.2469682941307;
-  rtb_FilterCoefficient_idx_1 = rtb_FilterCoefficient_4;
+  rtb_FilterCoefficient_3 = (30.7980856287723 * PID_Controller_U.state_error_e[1]
+    - PID_Controller_DW.Filter_DSTATE[1]) * 17.2469682941307;
+  rtb_FilterCoefficient_idx_1 = rtb_FilterCoefficient_3;
 
-  // Saturate: '<S200>/Saturation' incorporates:
-  //   DiscreteIntegrator: '<S193>/Integrator'
-  //   Gain: '<S196>/Filter Coefficient'
-  //   Sum: '<S202>/Sum'
+  // Saturate: '<S211>/Saturation' incorporates:
+  //   DiscreteIntegrator: '<S204>/Integrator'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Gain: '<S207>/Filter Coefficient'
+  //   Gain: '<S209>/Proportional Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S213>/Sum'
 
-  u0 = PID_Controller_DW.Integrator_DSTATE[1] + rtb_FilterCoefficient_4;
+  u0 = (18.567926327114 * PID_Controller_U.state_error_e[1] +
+        PID_Controller_DW.Integrator_DSTATE[1]) + rtb_FilterCoefficient_3;
   if (u0 > 120.0) {
     u0 = 120.0;
   } else if (u0 < -120.0) {
     u0 = -120.0;
   }
 
-  // Gain: '<S196>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S188>/Filter'
-  //   Gain: '<S186>/Derivative Gain'
-  //   Sum: '<S188>/SumD'
+  // Gain: '<S207>/Filter Coefficient' incorporates:
+  //   DiscreteIntegrator: '<S199>/Filter'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S199>/SumD'
 
-  rtb_FilterCoefficient_4 = (0.0 - PID_Controller_DW.Filter_DSTATE[2]) *
-    17.2469682941307;
+  rtb_FilterCoefficient_3 = (30.7980856287723 * PID_Controller_U.state_error_e[2]
+    - PID_Controller_DW.Filter_DSTATE[2]) * 17.2469682941307;
 
-  // Saturate: '<S200>/Saturation' incorporates:
-  //   DiscreteIntegrator: '<S193>/Integrator'
-  //   Gain: '<S196>/Filter Coefficient'
-  //   Sum: '<S202>/Sum'
+  // Saturate: '<S211>/Saturation' incorporates:
+  //   DiscreteIntegrator: '<S204>/Integrator'
+  //   Gain: '<S197>/Derivative Gain'
+  //   Gain: '<S207>/Filter Coefficient'
+  //   Gain: '<S209>/Proportional Gain'
+  //   Inport: '<Root>/state_error_e'
+  //   Sum: '<S213>/Sum'
 
-  u0_0 = PID_Controller_DW.Integrator_DSTATE[2] + rtb_FilterCoefficient_4;
+  u0_0 = (18.567926327114 * PID_Controller_U.state_error_e[2] +
+          PID_Controller_DW.Integrator_DSTATE[2]) + rtb_FilterCoefficient_3;
   if (u0_0 > 120.0) {
     u0_0 = 120.0;
   } else if (u0_0 < -120.0) {
     u0_0 = -120.0;
   }
 
-  // Sum: '<S52>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S43>/Integrator'
+  // Sum: '<S161>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S152>/Integrator'
+  //   Gain: '<S157>/Proportional Gain'
 
-  u0_1 = PID_Controller_DW.Integrator_DSTATE_j + rtb_FilterCoefficient_c;
-
-  // Sum: '<S102>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S93>/Integrator'
-
-  u0_2 = PID_Controller_DW.Integrator_DSTATE_h + rtb_FilterCoefficient_oz;
-
-  // Sum: '<S152>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S143>/Integrator'
-
-  u0_3 = PID_Controller_DW.Integrator_DSTATE_hi + rtb_FilterCoefficient_o;
+  u0_1 = (6.782 * rtb_corrected_error + PID_Controller_DW.Integrator_DSTATE_pu)
+    + rtb_FilterCoefficient_k;
   for (i = 0; i <= 0; i += 2) {
     // Product: '<S1>/Maps forces to pwms' incorporates:
-    //   Inport: '<Root>/Input1'
+    //   Inport: '<Root>/DCMbe'
     //   Product: '<S2>/Matrix Multiply'
 
     _mm_storeu_pd(&tmp[i], _mm_add_pd(_mm_add_pd(_mm_mul_pd(_mm_loadu_pd
-      (&PID_Controller_U.Input1[i + 3]), _mm_set1_pd(u0)), _mm_mul_pd
-      (_mm_loadu_pd(&PID_Controller_U.Input1[i]), _mm_set1_pd(y))), _mm_mul_pd
-      (_mm_loadu_pd(&PID_Controller_U.Input1[i + 6]), _mm_set1_pd(u0_0))));
+      (&PID_Controller_U.DCMbe[i + 3]), _mm_set1_pd(u0)), _mm_mul_pd
+      (_mm_loadu_pd(&PID_Controller_U.DCMbe[i]), _mm_set1_pd(y))), _mm_mul_pd
+      (_mm_loadu_pd(&PID_Controller_U.DCMbe[i + 6]), _mm_set1_pd(u0_0))));
   }
 
   for (i = 2; i < 3; i++) {
     // Product: '<S1>/Maps forces to pwms' incorporates:
-    //   Inport: '<Root>/Input1'
+    //   Inport: '<Root>/DCMbe'
     //   Product: '<S2>/Matrix Multiply'
 
-    tmp[i] = (PID_Controller_U.Input1[i + 3] * u0 + PID_Controller_U.Input1[i] *
-              y) + PID_Controller_U.Input1[i + 6] * u0_0;
+    tmp[i] = (PID_Controller_U.DCMbe[i + 3] * u0 + PID_Controller_U.DCMbe[i] * y)
+      + PID_Controller_U.DCMbe[i + 6] * u0_0;
   }
 
-  // Saturate: '<S50>/Saturation'
-  if (u0_1 > 24.360000000000003) {
+  // Saturate: '<S53>/Saturation'
+  if (rtb_DeadZone > 24.360000000000003) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[3] = 24.360000000000003;
-  } else if (u0_1 < -24.360000000000003) {
+  } else if (rtb_DeadZone < -24.360000000000003) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[3] = -24.360000000000003;
   } else {
     // Product: '<S1>/Maps forces to pwms'
-    tmp[3] = u0_1;
+    tmp[3] = rtb_DeadZone;
   }
 
-  // End of Saturate: '<S50>/Saturation'
+  // End of Saturate: '<S53>/Saturation'
 
-  // Saturate: '<S100>/Saturation'
-  if (u0_2 > 30.48) {
+  // Saturate: '<S107>/Saturation'
+  if (rtb_DeadZone_n > 30.48) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[4] = 30.48;
-  } else if (u0_2 < -30.48) {
+  } else if (rtb_DeadZone_n < -30.48) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[4] = -30.48;
   } else {
     // Product: '<S1>/Maps forces to pwms'
-    tmp[4] = u0_2;
+    tmp[4] = rtb_DeadZone_n;
   }
 
-  // End of Saturate: '<S100>/Saturation'
+  // End of Saturate: '<S107>/Saturation'
 
-  // Saturate: '<S150>/Saturation'
-  if (u0_3 > 25.880108191427642) {
+  // Saturate: '<S159>/Saturation'
+  if (u0_1 > 25.880108191427642) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[5] = 25.880108191427642;
-  } else if (u0_3 < -25.880108191427642) {
+  } else if (u0_1 < -25.880108191427642) {
     // Product: '<S1>/Maps forces to pwms'
     tmp[5] = -25.880108191427642;
   } else {
     // Product: '<S1>/Maps forces to pwms'
-    tmp[5] = u0_3;
+    tmp[5] = u0_1;
   }
 
-  // End of Saturate: '<S150>/Saturation'
+  // End of Saturate: '<S159>/Saturation'
   for (i_0 = 0; i_0 < 8; i_0++) {
     // Product: '<S1>/Maps forces to pwms' incorporates:
     //   Constant: '<S1>/Constant'
@@ -285,25 +330,175 @@ void PID_Controller::step()
     // End of MATLAB Function: '<S1>/Thruster Forces to PWM'
   }
 
-  // Update for DiscreteIntegrator: '<S188>/Filter' incorporates:
-  //   Gain: '<S196>/Filter Coefficient'
-  //
-  tmp_0 = _mm_add_pd(_mm_mul_pd(_mm_set1_pd(0.01), _mm_set_pd
-    (rtb_FilterCoefficient_idx_1, rtb_FilterCoefficient_idx_0)), _mm_loadu_pd
-                     (&PID_Controller_DW.Filter_DSTATE[0]));
-  _mm_storeu_pd(&PID_Controller_DW.Filter_DSTATE[0], tmp_0);
-  PID_Controller_DW.Filter_DSTATE[2] += 0.01 * rtb_FilterCoefficient_4;
+  // DeadZone: '<S92>/DeadZone'
+  if (rtb_DeadZone_n > 30.48) {
+    rtb_DeadZone_n -= 30.48;
+  } else if (rtb_DeadZone_n >= -30.48) {
+    rtb_DeadZone_n = 0.0;
+  } else {
+    rtb_DeadZone_n -= -30.48;
+  }
 
-  // Update for DiscreteIntegrator: '<S38>/Filter'
-  PID_Controller_DW.Filter_DSTATE_d += 0.01 * rtb_FilterCoefficient_c;
+  // End of DeadZone: '<S92>/DeadZone'
 
-  // Update for DiscreteIntegrator: '<S88>/Filter'
-  PID_Controller_DW.Filter_DSTATE_c += 0.01 * rtb_FilterCoefficient_oz;
+  // Gain: '<S97>/Integral Gain' incorporates:
+  //   Inport: '<Root>/state_error_e'
 
-  // Update for DiscreteIntegrator: '<S138>/Filter'
-  PID_Controller_DW.Filter_DSTATE_h += 0.01 * rtb_FilterCoefficient_o;
+  y = 3.236 * PID_Controller_U.state_error_e[4];
 
-  // End of Outputs for SubSystem: '<Root>/Controller'
+  // Switch: '<S90>/Switch1' incorporates:
+  //   Constant: '<S90>/Clamping_zero'
+  //   Constant: '<S90>/Constant'
+  //   Constant: '<S90>/Constant2'
+  //   RelationalOperator: '<S90>/fix for DT propagation issue'
+
+  if (rtb_DeadZone_n > 0.0) {
+    tmp_0 = 1;
+  } else {
+    tmp_0 = -1;
+  }
+
+  // Switch: '<S90>/Switch2' incorporates:
+  //   Constant: '<S90>/Clamping_zero'
+  //   Constant: '<S90>/Constant3'
+  //   Constant: '<S90>/Constant4'
+  //   RelationalOperator: '<S90>/fix for DT propagation issue1'
+
+  if (y > 0.0) {
+    tmp_1 = 1;
+  } else {
+    tmp_1 = -1;
+  }
+
+  // Switch: '<S90>/Switch' incorporates:
+  //   Constant: '<S90>/Clamping_zero'
+  //   Constant: '<S90>/Constant1'
+  //   Logic: '<S90>/AND3'
+  //   RelationalOperator: '<S90>/Equal1'
+  //   RelationalOperator: '<S90>/Relational Operator'
+  //   Switch: '<S90>/Switch1'
+  //   Switch: '<S90>/Switch2'
+
+  if ((rtb_DeadZone_n != 0.0) && (tmp_0 == tmp_1)) {
+    rtb_DeadZone_n = 0.0;
+  } else {
+    rtb_DeadZone_n = y;
+  }
+
+  // End of Switch: '<S90>/Switch'
+
+  // DeadZone: '<S38>/DeadZone'
+  if (rtb_DeadZone > 24.360000000000003) {
+    rtb_DeadZone -= 24.360000000000003;
+  } else if (rtb_DeadZone >= -24.360000000000003) {
+    rtb_DeadZone = 0.0;
+  } else {
+    rtb_DeadZone -= -24.360000000000003;
+  }
+
+  // End of DeadZone: '<S38>/DeadZone'
+
+  // Gain: '<S43>/Integral Gain' incorporates:
+  //   Inport: '<Root>/state_error_e'
+
+  y = 2.325 * PID_Controller_U.state_error_e[3];
+
+  // Update for DiscreteIntegrator: '<S204>/Integrator' incorporates:
+  //   Gain: '<S201>/Integral Gain'
+  //   Inport: '<Root>/state_error_e'
+
+  PID_Controller_DW.Integrator_DSTATE[0] += 2.74882046275699 *
+    PID_Controller_U.state_error_e[0] * 0.01;
+
+  // Update for DiscreteIntegrator: '<S199>/Filter' incorporates:
+  //   Gain: '<S207>/Filter Coefficient'
+
+  PID_Controller_DW.Filter_DSTATE[0] += 0.01 * rtb_FilterCoefficient_idx_0;
+
+  // Update for DiscreteIntegrator: '<S204>/Integrator' incorporates:
+  //   Gain: '<S201>/Integral Gain'
+  //   Inport: '<Root>/state_error_e'
+
+  PID_Controller_DW.Integrator_DSTATE[1] += 2.74882046275699 *
+    PID_Controller_U.state_error_e[1] * 0.01;
+
+  // Update for DiscreteIntegrator: '<S199>/Filter' incorporates:
+  //   Gain: '<S207>/Filter Coefficient'
+
+  PID_Controller_DW.Filter_DSTATE[1] += 0.01 * rtb_FilterCoefficient_idx_1;
+
+  // Update for DiscreteIntegrator: '<S204>/Integrator' incorporates:
+  //   Gain: '<S201>/Integral Gain'
+  //   Inport: '<Root>/state_error_e'
+
+  PID_Controller_DW.Integrator_DSTATE[2] += 2.74882046275699 *
+    PID_Controller_U.state_error_e[2] * 0.01;
+
+  // Update for DiscreteIntegrator: '<S199>/Filter' incorporates:
+  //   Gain: '<S207>/Filter Coefficient'
+
+  PID_Controller_DW.Filter_DSTATE[2] += 0.01 * rtb_FilterCoefficient_3;
+
+  // Switch: '<S36>/Switch1' incorporates:
+  //   Constant: '<S36>/Clamping_zero'
+  //   Constant: '<S36>/Constant'
+  //   Constant: '<S36>/Constant2'
+  //   RelationalOperator: '<S36>/fix for DT propagation issue'
+
+  if (rtb_DeadZone > 0.0) {
+    tmp_0 = 1;
+  } else {
+    tmp_0 = -1;
+  }
+
+  // Switch: '<S36>/Switch2' incorporates:
+  //   Constant: '<S36>/Clamping_zero'
+  //   Constant: '<S36>/Constant3'
+  //   Constant: '<S36>/Constant4'
+  //   RelationalOperator: '<S36>/fix for DT propagation issue1'
+
+  if (y > 0.0) {
+    tmp_1 = 1;
+  } else {
+    tmp_1 = -1;
+  }
+
+  // Switch: '<S36>/Switch' incorporates:
+  //   Constant: '<S36>/Clamping_zero'
+  //   Constant: '<S36>/Constant1'
+  //   Logic: '<S36>/AND3'
+  //   RelationalOperator: '<S36>/Equal1'
+  //   RelationalOperator: '<S36>/Relational Operator'
+  //   Switch: '<S36>/Switch1'
+  //   Switch: '<S36>/Switch2'
+
+  if ((rtb_DeadZone != 0.0) && (tmp_0 == tmp_1)) {
+    y = 0.0;
+  }
+
+  // Update for DiscreteIntegrator: '<S46>/Integrator' incorporates:
+  //   Switch: '<S36>/Switch'
+
+  PID_Controller_DW.Integrator_DSTATE_n += 0.01 * y;
+
+  // Update for DiscreteIntegrator: '<S41>/Filter'
+  PID_Controller_DW.Filter_DSTATE_c += 0.01 * rtb_FilterCoefficient_n;
+
+  // Update for DiscreteIntegrator: '<S100>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_p += 0.01 * rtb_DeadZone_n;
+
+  // Update for DiscreteIntegrator: '<S95>/Filter'
+  PID_Controller_DW.Filter_DSTATE_l += 0.01 * rtb_FilterCoefficient_b;
+
+  // Update for DiscreteIntegrator: '<S152>/Integrator' incorporates:
+  //   Gain: '<S149>/Integral Gain'
+
+  PID_Controller_DW.Integrator_DSTATE_pu += 2.479 * rtb_corrected_error * 0.01;
+
+  // Update for DiscreteIntegrator: '<S147>/Filter'
+  PID_Controller_DW.Filter_DSTATE_f += 0.01 * rtb_FilterCoefficient_k;
+
+  // End of Outputs for SubSystem: '<Root>/Controller1'
 }
 
 // Model initialize function
@@ -316,6 +511,17 @@ void PID_Controller::initialize()
 void PID_Controller::terminate()
 {
   // (no terminate code required)
+}
+
+const char_T* PID_Controller::RT_MODEL_PID_Controller_T::getErrorStatus() const
+{
+  return (errorStatus);
+}
+
+void PID_Controller::RT_MODEL_PID_Controller_T::setErrorStatus(const char_T*
+  const volatile aErrorStatus)
+{
+  (errorStatus = aErrorStatus);
 }
 
 // Constructor
