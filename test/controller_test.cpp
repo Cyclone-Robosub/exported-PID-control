@@ -55,7 +55,8 @@ TEST_F(ControllerTest, ZeroErrorProduces1500Outputs)
     }
     controller.setExternalInputs(&extU);
     controller.step();
-    
+    extY = controller.getExternalOutputs();
+
     for (int i = 0; i < 8; i++) 
     {
         EXPECT_DOUBLE_EQ(1500.0, extY.PWM[i])
@@ -73,11 +74,15 @@ TEST_F(ControllerTest, ErrorProducesNon1500Outputs)
     for (int i = 0; i < 6; i++) {
         extU.state_error_e[i] = 1.0;
     }
-    
+    controller.setExternalInputs(&extU);
+
     controller.step();
 
     bool non1500 = false;   
+
+
     PID_Controller::ExtY_PID_Controller_T extY;
+    extY = controller.getExternalOutputs();
     for (int i = 0; i < 8; i++) 
     {
         if (extY.PWM[i] != 1500.0) { 
