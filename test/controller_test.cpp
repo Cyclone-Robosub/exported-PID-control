@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/controller_codegenTest.h"
+#include "PID_Controller.h"
 
 
 // fixture not currently being used. Destroy?
@@ -17,41 +17,51 @@ protected:
 // Test 1: Initialize the controller
 TEST_F(ControllerTest, CanBeInitialized) 
 {
-    controller_codegenTest controller;
-    ASSERT_NO_THROW(controller.initialize());
+    PID_Controller controller;
+    controller.initialize();
+    SUCCEED();
 }
 
 // Test 2: Check that input can be set          
 TEST_F(ControllerTest, InputCanBeSet) 
 {
-    controller_codegenTest controller;
+    PID_Controller controller;
+    PID_Controller::ExtU_PID_Controller_T extU;
+    extU.state_error_e[0] = 0.0;
+    extU.state_error_e[1] = 0.0;
+    extU.state_error_e[2] = 0.0;
+    extU.state_error_e[3] = 0.0;
+    extU.state_error_e[4] = 0.0;
+    extU.state_error_e[5] = 0.0;
+    extU.DCMbe[0] = 0.0;
+    extU.DCMbe[1] = 0.0;
+    extU.DCMbe[2] = 0.0;
+    extU.DCMbe[3] = 0.0;
+    extU.DCMbe[4] = 0.0;
+    extU.DCMbe[5] = 0.0;
+    
 
-    controller.rtU.Input[0] = 0.0;
-    controller.rtU.Input[1] = 0.0;
-    controller.rtU.Input[2] = 0.0;
-    controller.rtU.Input[3] = 0.0;
-    controller.rtU.Input[4] = 0.0;
-    controller.rtU.Input[5] = 0.0;
-
-    ASSERT_NO_THROW(controller.step());
+      controller.step();
 }   
 
 // Test 3: Check that when all errors are zero, all outputs equal 1500
 TEST_F(ControllerTest, ZeroErrorProduces1500Outputs) 
 {
-    controller_codegenTest controller;
+    PID_Controller controller;
     controller.initialize();
-    
+    PID_Controller::ExtU_PID_Controller_T extU;
+    PID_Controller::ExtY_PID_Controller_T extY;
     for (int i = 0; i < 6; i++) 
     {
-        controller.rtU.Input[i] = 0.0;
+        extU.state_error_e[i] = 0.0;
     }
-    
+    controller.setExternalInputs(&extU);
     controller.step();
-    
+    extY = controller.getExternalOutputs();
+
     for (int i = 0; i < 8; i++) 
     {
-        EXPECT_DOUBLE_EQ(1500.0, controller.rtY.Out1[i])
+        EXPECT_DOUBLE_EQ(1500.0, extY.PWM[i])
             << "Output " << i << " should be 1500 when all errors are zero";
     }
 }
@@ -60,19 +70,24 @@ TEST_F(ControllerTest, ZeroErrorProduces1500Outputs)
 TEST_F(ControllerTest, ErrorProducesNon1500Outputs)
 {
     
-    controller_codegenTest controller;
+    PID_Controller controller;
     controller.initialize();
-    
+    PID_Controller::ExtU_PID_Controller_T extU;
     for (int i = 0; i < 6; i++) {
-        controller.rtU.Input[i] = 1.0;
+        extU.state_error_e[i] = 1.0;
     }
-    
+    controller.setExternalInputs(&extU);
+
     controller.step();
 
-    bool non1500 = false;    
+    bool non1500 = false;   
+
+
+    PID_Controller::ExtY_PID_Controller_T extY;
+    extY = controller.getExternalOutputs();
     for (int i = 0; i < 8; i++) 
     {
-        if (controller.rtY.Out1[i] != 1500.0) { 
+        if (extY.PWM[i] != 1500.0) { 
             non1500 = true;
         }
     }   

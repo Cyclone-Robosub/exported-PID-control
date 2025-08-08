@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 project(PID_Controller)
 
 # Set directory properties.
-set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT controller_codegenTest)
+set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT PID_Controller)
 
 # Enable testing for the entire project
 enable_testing()

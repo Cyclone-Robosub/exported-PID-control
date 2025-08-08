@@ -5,23 +5,21 @@
 //
 // File: ert_main.cpp
 //
-// Code generated for Simulink model 'controller_codegenTest'.
+// Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 1.4
-// Simulink Coder version         : 24.1 (R2024a) 19-Nov-2023
-// C/C++ source code generated on : Tue May 13 21:32:40 2025
+// Model version                  : 4.0
+// Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
+// C/C++ source code generated on : Thu Aug  7 00:14:38 2025
 //
 // Target selection: ert.tlc
-// Embedded hardware selection: Custom Processor->Custom Processor
-// Code generation objectives:
-//    1. Execution efficiency
-//    2. RAM efficiency
+// Embedded hardware selection: Intel->x86-64 (Windows64)
+// Code generation objectives: Unspecified
 // Validation result: Not run
 //
 #include <stdio.h>              // This example main program uses printf/fflush
-#include "controller_codegenTest.h"    // Model header file
+#include "PID_Controller.h"            // Model header file
 
-static controller_codegenTest rtObj;   // Instance of model class
+static PID_Controller PID_Controller_Obj;// Instance of model class
 
 //
 // Associating rt_OneStep with a real-time clock or interrupt service routine
@@ -43,7 +41,7 @@ void rt_OneStep(void)
 
   // Check for overrun
   if (OverrunFlag) {
-    rtmSetErrorStatus(rtObj.getRTM(), "Overrun");
+    PID_Controller_Obj.getRTM()->setErrorStatus("Overrun");
     return;
   }
 
@@ -54,7 +52,7 @@ void rt_OneStep(void)
   // Set model inputs here
 
   // Step the model
-  rtObj.step();
+  PID_Controller_Obj.step();
 
   // Get model outputs here
 
@@ -79,10 +77,10 @@ int_T main(int_T argc, const char *argv[])
   (void)(argv);
 
   // Initialize model
-  rtObj.initialize();
+  PID_Controller_Obj.initialize();
 
   // Attach rt_OneStep to a timer or interrupt service routine with
-  //  period 0.1 seconds (base rate of the model) here.
+  //  period 0.01 seconds (base rate of the model) here.
   //  The call syntax for rt_OneStep is
   //
   //   rt_OneStep();
@@ -91,10 +89,12 @@ int_T main(int_T argc, const char *argv[])
          "Generated ERT main won't simulate model step behavior. "
          "To change this behavior select the 'MAT-file logging' option.\n");
   fflush((nullptr));
-  while (rtmGetErrorStatus(rtObj.getRTM()) == (nullptr)) {
+  while (PID_Controller_Obj.getRTM()->getErrorStatus() == (nullptr)) {
     //  Perform application tasks here
   }
 
+  // Terminate model
+  PID_Controller_Obj.terminate();
   return 0;
 }
 
