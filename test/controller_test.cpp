@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/controller_codegenTest.h"
+#include "PID_Controller.h"
 
 class ControllerTest : public ::testing::Test {
 protected:
@@ -15,7 +15,7 @@ protected:
 // Test 1: Initialize the controller
 TEST_F(ControllerTest, CanBeInitialized) 
 {
-    controller_codegenTest controller;
+    PID_Controller controller;
     controller.initialize();
     SUCCEED();
 }
@@ -23,7 +23,7 @@ TEST_F(ControllerTest, CanBeInitialized)
 // Test 2: Check that input can be set          
 TEST_F(ControllerTest, InputCanBeSet) 
 {
-    controller_codegenTest controller;
+    PID_Controller controller;
 
     controller.rtU.Input[0] = 0.0;
     controller.rtU.Input[1] = 0.0;
@@ -38,7 +38,7 @@ TEST_F(ControllerTest, InputCanBeSet)
 // Test 3: Check that when all errors are zero, all outputs equal 1500
 TEST_F(ControllerTest, ZeroErrorProduces1500Outputs) 
 {
-    controller_codegenTest controller;
+    PID_Controller controller;
     controller.initialize();
     
     for (int i = 0; i < 6; i++) 
@@ -59,7 +59,7 @@ TEST_F(ControllerTest, ZeroErrorProduces1500Outputs)
 TEST_F(ControllerTest, ErrorProducesNon1500Outputs)
 {
     
-    controller_codegenTest controller;
+    PID_Controller controller;
     controller.initialize();
     
     for (int i = 0; i < 6; i++) {
