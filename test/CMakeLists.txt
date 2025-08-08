@@ -1,16 +1,16 @@
+
 find_package(GTest REQUIRED)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../src
     ${GTEST_INCLUDE_DIRS}
 )
+#add_library(controller_test_lib
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../src/controller_codegenTest.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/../src/controller_codegenTest_data.cpp
+#)
 
-# add_library(controller_test_lib
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../src/controller_codegenTest.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/../src/controller_codegenTest_data.cpp
-# )
-
-target_compile_definitions(controller_lib PRIVATE -DMODEL=PID_Controller
+target_compile_definitions(controller_lib PRIVATE -DMODEL=controller_codegenTest
     -DNUMST=1
     -DNCSTATES=0
     -DHAVESTDIO
@@ -32,5 +32,4 @@ target_link_libraries(controller_test
     ${GTEST_LIBRARIES}
     pthread
 )
-
 add_test(NAME controller_test COMMAND controller_test) 
