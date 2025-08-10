@@ -3,7 +3,7 @@
 // course requirements at degree granting institutions only.  Not for
 // government, commercial, or other organizational use.
 //
-// File: rtGetNaN.cpp
+// File: rtmodel.h
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
@@ -16,30 +16,24 @@
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
+#ifndef rtmodel_h_
+#define rtmodel_h_
+#include "PID_Controller.h"
+#define MODEL_CLASSNAME                PID_Controller
+#define MODEL_STEPNAME                 step
 
-#include "rtwtypes.h"
+//
+//  ROOT_IO_FORMAT: 0 (Individual arguments)
+//  ROOT_IO_FORMAT: 1 (Structure reference)
+//  ROOT_IO_FORMAT: 2 (Part of model data structure)
 
-extern "C"
-{
+#define ROOT_IO_FORMAT                 1
 
-#include "rtGetNaN.h"
-
-}
-
-extern "C"
-{
-  // Return rtNaN needed by the generated code.
-  real_T rtGetNaN(void)
-  {
-    return rtNaN;
-  }
-
-  // Return rtNaNF needed by the generated code.
-  real32_T rtGetNaNF(void)
-  {
-    return rtNaNF;
-  }
-}
+// Macros generated for backwards compatibility
+#ifndef rtmGetStopRequested
+#define rtmGetStopRequested(rtm)       ((void*) 0)
+#endif
+#endif                                 // rtmodel_h_
 
 //
 // File trailer for generated code.

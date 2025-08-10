@@ -7,12 +7,12 @@
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 4.0
+// Model version                  : 4.2
 // Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
-// C/C++ source code generated on : Thu Aug  7 00:14:38 2025
+// C/C++ source code generated on : Sat Aug  9 19:56:37 2025
 //
 // Target selection: ert.tlc
-// Embedded hardware selection: Intel->x86-64 (Windows64)
+// Embedded hardware selection: ARM Compatible->ARM Cortex-A (64-bit)
 // Code generation objectives: Unspecified
 // Validation result: Not run
 //
@@ -42,6 +42,20 @@ class PID_Controller final
 {
   // public data and function members
  public:
+  // Block signals (default storage)
+  struct B_PID_Controller_T {
+    real_T dv[6];
+    real_T y;
+    real_T DeadZone;                   // '<S38>/DeadZone'
+    real_T FilterCoefficient_o;        // '<S49>/Filter Coefficient'
+    real_T DeadZone_f;                 // '<S92>/DeadZone'
+    real_T FilterCoefficient_i;        // '<S103>/Filter Coefficient'
+    real_T corrected_error;            // '<S2>/Yaw Overshoot Corrector'
+    real_T FilterCoefficient_a;        // '<S155>/Filter Coefficient'
+    real_T rtb_FilterCoefficient_m;
+    real_T rtb_FilterCoefficient_idx_0;
+  };
+
   // Block states (default storage) for system '<Root>'
   struct DW_PID_Controller_T {
     real_T Integrator_DSTATE[3];       // '<S204>/Integrator'
@@ -131,6 +145,9 @@ class PID_Controller final
 
   // External outputs
   ExtY_PID_Controller_T PID_Controller_Y;
+
+  // Block signals
+  B_PID_Controller_T PID_Controller_B;
 
   // Block states
   DW_PID_Controller_T PID_Controller_DW;
