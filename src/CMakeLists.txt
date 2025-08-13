@@ -46,24 +46,25 @@ find_library(FOUND_LIBM m NO_SYSTEM_ENVIRONMENT_PATH PATHS ${CMAKE_C_IMPLICIT_LI
 ###########################################################################
 
 # Definition of target "PID_Controller".
-add_library(controller_lib  ${START_DIR}/src/PID_Controller.cpp
-    ${START_DIR}/src/PID_Controller_data.cpp
-    ${START_DIR}/src/rtGetInf.cpp
-    ${START_DIR}/src/rtGetNaN.cpp
-    ${START_DIR}/src/rt_nonfinite.cpp)
+add_executable(PID_Controller  ${START_DIR}/PID_Controller_ert_rtw/PID_Controller.cpp
+    ${START_DIR}/PID_Controller_ert_rtw/PID_Controller_data.cpp
+    ${START_DIR}/PID_Controller_ert_rtw/rtGetInf.cpp
+    ${START_DIR}/PID_Controller_ert_rtw/rtGetNaN.cpp
+    ${START_DIR}/PID_Controller_ert_rtw/rt_nonfinite.cpp
+    ${MATLAB_ROOT}/rtw/c/src/common/rt_cppclass_main.cpp)
 
 # Set properties for target "PID_Controller".
-set_target_properties(controller_lib PROPERTIES PREFIX ""
+set_target_properties(PID_Controller PROPERTIES PREFIX ""
     POSITION_INDEPENDENT_CODE ON
     RUNTIME_OUTPUT_DIRECTORY "${BINARY_START_DIR}/./$<0:>"
     LIBRARY_OUTPUT_DIRECTORY "${BINARY_START_DIR}/./$<0:>"
     ARCHIVE_OUTPUT_DIRECTORY "${BINARY_START_DIR}/./$<0:>")
 
 # Specify language features required for target "PID_Controller".
-target_compile_features(controller_lib PUBLIC cxx_std_11)
+target_compile_features(PID_Controller PUBLIC cxx_std_11)
 
 # Specify compiler preprocessor definitions for target "PID_Controller".
-target_compile_definitions(controller_lib PRIVATE -DMODEL=PID_Controller
+target_compile_definitions(PID_Controller PRIVATE -DMODEL=PID_Controller
     -DNUMST=1
     -DNCSTATES=0
     -DHAVESTDIO
@@ -79,8 +80,8 @@ target_compile_definitions(controller_lib PRIVATE -DMODEL=PID_Controller
     -DMT=0)
 
 # Specify include directories for target "PID_Controller".
-target_include_directories(controller_lib PRIVATE ${START_DIR}
-    ${START_DIR}/src
+target_include_directories(PID_Controller PRIVATE ${START_DIR}
+    ${START_DIR}/PID_Controller_ert_rtw
     ${MATLAB_ROOT}/extern/include
     ${MATLAB_ROOT}/simulink/include
     ${MATLAB_ROOT}/rtw/c/src
@@ -91,7 +92,7 @@ target_include_directories(controller_lib PRIVATE ${START_DIR}
 # generator expressions are used to create a CMakeLists.txt file that 
 # supports multiple platforms with differently named system library 
 # dependencies.
-target_link_libraries(controller_lib PRIVATE $<$<BOOL:${FOUND_LIBM}>:m>
+target_link_libraries(PID_Controller PRIVATE $<$<BOOL:${FOUND_LIBM}>:m>
     $<$<BOOL:${WIN32}>:kernel32>
     $<$<BOOL:${WIN32}>:ws2_32>
     $<$<BOOL:${WIN32}>:mswsock>
@@ -104,23 +105,23 @@ if(APPLE AND (CMAKE_C_COMPILER_ID STREQUAL "AppleClang"))
                 "xcrun;dsymutil;$<TARGET_FILE:PID_Controller>;--flat,"
                 "true"
         >)
-    add_custom_command(TARGET controller_lib
+    add_custom_command(TARGET PID_Controller
             POST_BUILD
             COMMAND "${_dsymutilcmd}"
             COMMAND_EXPAND_LISTS
-            BYPRODUCTS controller_lib.dwarf)
+            BYPRODUCTS PID_Controller.dwarf)
 endif()
 
 
 ###########################################################################
 ## Build success message
 ###########################################################################
-add_custom_command(TARGET controller_lib POST_BUILD
-     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "\\#\\#\\# Created executable: $<TARGET_FILE:controller_lib>")
+add_custom_command(TARGET PID_Controller POST_BUILD
+     COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan "\\#\\#\\# Created executable: $<TARGET_FILE:PID_Controller>")
 
 ###########################################################################
 ## Call toolchain hook function if defined
 ###########################################################################
 if(COMMAND toolchain_target_hook)
-    toolchain_target_hook(controller_lib)
+    toolchain_target_hook(PID_Controller)
 endif()
