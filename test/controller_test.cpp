@@ -92,6 +92,15 @@ TEST_F(ControllerTest, ErrorProducesNon1500Outputs)
 }
 
 TEST_F(ControllerTest, InitalOutputsForDiaganolUnitErrors){
+    std::vector<std::vector<double>> pid_values = 
+    {
+        {18.568,2.749,30.798,17.247},
+        {18.568,2.749,30.798,17.247},
+        {18.568,2.749,30.798,17.247},
+        {4.773,2.325,2.504,54.54},
+        {6.912,3.236,3.625,54.54},
+        {6.782,2.479,2.957,114.828}
+    };
     PID_Controller controller;
     controller.initialize();
     PID_Controller::ExtU_PID_Controller_T extU;
@@ -103,7 +112,19 @@ TEST_F(ControllerTest, InitalOutputsForDiaganolUnitErrors){
     extU.DFC_error[0] = 0.0;
     extU.DFC_error[1] = 0.0;
 
-    int expected_outputs[8] = {1821, 1100, 1379, 1100, 1900, 1143, 1804, 1900};
+    for (int i = 0; i < 4; i++) {
+        extU.PIDN_X[i] = pid_values[0][i];
+        extU.PIDN_Y[i] = pid_values[1][i];
+        extU.PIDN_Z[i] = pid_values[2][i];
+        extU.PIDN_roll[i] = pid_values[3][i];
+        extU.PIDN_pitch[i] = pid_values[4][i];
+        extU.PIDN_yaw[i] = pid_values[5][i];
+    }
+
+    int expected_outputs[8] = 
+    {
+        1792, 1254, 1598, 1212, 1792, 1212, 1791, 1314
+    };
     controller.setExternalInputs(&extU);
     controller.step();
     PID_Controller::ExtY_PID_Controller_T extY;
