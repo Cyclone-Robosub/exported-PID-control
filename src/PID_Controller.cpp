@@ -7,9 +7,9 @@
 //
 // Code generated for Simulink model 'PID_Controller'.
 //
-// Model version                  : 4.7
+// Model version                  : 4.8
 // Simulink Coder version         : 24.2 (R2024b) 21-Jun-2024
-// C/C++ source code generated on : Wed Aug 13 14:57:12 2025
+// C/C++ source code generated on : Wed Aug 13 21:12:11 2025
 //
 // Target selection: ert.tlc
 // Embedded hardware selection: ARM Compatible->ARM Cortex-A (64-bit)
@@ -72,9 +72,9 @@ real_T rt_powd_snf(real_T u0, real_T u1)
 // Model step function
 void PID_Controller::step()
 {
+  real_T rtb_NProdOut_h3;
   real_T tmp;
   real_T tmp_0;
-  real_T u0;
   int32_T i;
   int32_T itmp;
   int32_T p2;
@@ -101,33 +101,30 @@ void PID_Controller::step()
 
   PID_Controller_B.absx11 = std::cos(PID_Controller_U.states[5]);
   PID_Controller_B.absx21 = std::sin(PID_Controller_U.states[5]);
-  PID_Controller_B.ct_idx_0 = std::cos(PID_Controller_U.states[4]);
-  PID_Controller_B.FilterCoefficient_n = std::sin(PID_Controller_U.states[4]);
-  PID_Controller_B.absx31 = std::cos(PID_Controller_U.states[3]);
-  PID_Controller_B.FilterCoefficient_c = std::sin(PID_Controller_U.states[3]);
-  PID_Controller_B.DCMbe[0] = PID_Controller_B.absx11 *
-    PID_Controller_B.ct_idx_0;
-  PID_Controller_B.corrected_error = PID_Controller_B.FilterCoefficient_n *
-    PID_Controller_B.FilterCoefficient_c;
-  PID_Controller_B.DCMbe[3] = PID_Controller_B.corrected_error *
-    PID_Controller_B.absx11 - PID_Controller_B.absx21 * PID_Controller_B.absx31;
-  PID_Controller_B.FilterCoefficient_e = PID_Controller_B.FilterCoefficient_n *
-    PID_Controller_B.absx31;
-  PID_Controller_B.DCMbe[6] = PID_Controller_B.FilterCoefficient_e *
+  PID_Controller_B.absx31 = std::cos(PID_Controller_U.states[4]);
+  PID_Controller_B.t1 = std::sin(PID_Controller_U.states[4]);
+  PID_Controller_B.NProdOut_g = std::cos(PID_Controller_U.states[3]);
+  PID_Controller_B.NProdOut_i = std::sin(PID_Controller_U.states[3]);
+  PID_Controller_B.DCMbe[0] = PID_Controller_B.absx11 * PID_Controller_B.absx31;
+  rtb_NProdOut_h3 = PID_Controller_B.t1 * PID_Controller_B.NProdOut_i;
+  PID_Controller_B.DCMbe[3] = rtb_NProdOut_h3 * PID_Controller_B.absx11 -
+    PID_Controller_B.absx21 * PID_Controller_B.NProdOut_g;
+  PID_Controller_B.DeadZone_f = PID_Controller_B.t1 *
+    PID_Controller_B.NProdOut_g;
+  PID_Controller_B.DCMbe[6] = PID_Controller_B.DeadZone_f *
     PID_Controller_B.absx11 + PID_Controller_B.absx21 *
-    PID_Controller_B.FilterCoefficient_c;
-  PID_Controller_B.DCMbe[1] = PID_Controller_B.absx21 *
-    PID_Controller_B.ct_idx_0;
-  PID_Controller_B.DCMbe[4] = PID_Controller_B.corrected_error *
-    PID_Controller_B.absx21 + PID_Controller_B.absx11 * PID_Controller_B.absx31;
-  PID_Controller_B.DCMbe[7] = PID_Controller_B.FilterCoefficient_e *
+    PID_Controller_B.NProdOut_i;
+  PID_Controller_B.DCMbe[1] = PID_Controller_B.absx21 * PID_Controller_B.absx31;
+  PID_Controller_B.DCMbe[4] = rtb_NProdOut_h3 * PID_Controller_B.absx21 +
+    PID_Controller_B.absx11 * PID_Controller_B.NProdOut_g;
+  PID_Controller_B.DCMbe[7] = PID_Controller_B.DeadZone_f *
     PID_Controller_B.absx21 - PID_Controller_B.absx11 *
-    PID_Controller_B.FilterCoefficient_c;
-  PID_Controller_B.DCMbe[2] = -PID_Controller_B.FilterCoefficient_n;
-  PID_Controller_B.DCMbe[5] = PID_Controller_B.ct_idx_0 *
-    PID_Controller_B.FilterCoefficient_c;
-  PID_Controller_B.DCMbe[8] = PID_Controller_B.ct_idx_0 *
-    PID_Controller_B.absx31;
+    PID_Controller_B.NProdOut_i;
+  PID_Controller_B.DCMbe[2] = -PID_Controller_B.t1;
+  PID_Controller_B.DCMbe[5] = PID_Controller_B.absx31 *
+    PID_Controller_B.NProdOut_i;
+  PID_Controller_B.DCMbe[8] = PID_Controller_B.absx31 *
+    PID_Controller_B.NProdOut_g;
   std::memcpy(&PID_Controller_B.x[0], &PID_Controller_B.DCMbe[0], 9U * sizeof
               (real_T));
   i = 0;
@@ -135,7 +132,7 @@ void PID_Controller::step()
   p3 = 6;
   PID_Controller_B.absx11 = std::abs(PID_Controller_B.DCMbe[0]);
   PID_Controller_B.absx21 = std::abs(PID_Controller_B.DCMbe[1]);
-  PID_Controller_B.absx31 = std::abs(-PID_Controller_B.FilterCoefficient_n);
+  PID_Controller_B.absx31 = std::abs(-PID_Controller_B.t1);
   if ((PID_Controller_B.absx21 > PID_Controller_B.absx11) &&
       (PID_Controller_B.absx21 > PID_Controller_B.absx31)) {
     i = 3;
@@ -149,7 +146,7 @@ void PID_Controller::step()
   } else if (PID_Controller_B.absx31 > PID_Controller_B.absx11) {
     i = 6;
     p3 = 0;
-    PID_Controller_B.x[0] = -PID_Controller_B.FilterCoefficient_n;
+    PID_Controller_B.x[0] = -PID_Controller_B.t1;
     PID_Controller_B.x[2] = PID_Controller_B.DCMbe[0];
     PID_Controller_B.x[3] = PID_Controller_B.DCMbe[5];
     PID_Controller_B.x[5] = PID_Controller_B.DCMbe[3];
@@ -167,42 +164,42 @@ void PID_Controller::step()
     itmp = p2;
     p2 = p3;
     p3 = itmp;
-    PID_Controller_B.absx11 = PID_Controller_B.x[1];
+    PID_Controller_B.t1 = PID_Controller_B.x[1];
     PID_Controller_B.x[1] = PID_Controller_B.x[2];
-    PID_Controller_B.x[2] = PID_Controller_B.absx11;
-    PID_Controller_B.absx11 = PID_Controller_B.x[4];
+    PID_Controller_B.x[2] = PID_Controller_B.t1;
+    PID_Controller_B.t1 = PID_Controller_B.x[4];
     PID_Controller_B.x[4] = PID_Controller_B.x[5];
-    PID_Controller_B.x[5] = PID_Controller_B.absx11;
-    PID_Controller_B.absx11 = PID_Controller_B.x[7];
+    PID_Controller_B.x[5] = PID_Controller_B.t1;
+    PID_Controller_B.t1 = PID_Controller_B.x[7];
     PID_Controller_B.x[7] = PID_Controller_B.x[8];
-    PID_Controller_B.x[8] = PID_Controller_B.absx11;
+    PID_Controller_B.x[8] = PID_Controller_B.t1;
   }
 
   PID_Controller_B.x[5] /= PID_Controller_B.x[4];
   PID_Controller_B.x[8] -= PID_Controller_B.x[5] * PID_Controller_B.x[7];
-  PID_Controller_B.absx11 = (PID_Controller_B.x[1] * PID_Controller_B.x[5] -
+  PID_Controller_B.t1 = (PID_Controller_B.x[1] * PID_Controller_B.x[5] -
     PID_Controller_B.x[2]) / PID_Controller_B.x[8];
-  PID_Controller_B.absx21 = -(PID_Controller_B.x[7] * PID_Controller_B.absx11 +
+  PID_Controller_B.absx11 = -(PID_Controller_B.x[7] * PID_Controller_B.t1 +
     PID_Controller_B.x[1]) / PID_Controller_B.x[4];
   PID_Controller_B.DCMeb[i] = ((1.0 - PID_Controller_B.x[3] *
-    PID_Controller_B.absx21) - PID_Controller_B.x[6] * PID_Controller_B.absx11) /
+    PID_Controller_B.absx11) - PID_Controller_B.x[6] * PID_Controller_B.t1) /
     PID_Controller_B.x[0];
-  PID_Controller_B.DCMeb[i + 1] = PID_Controller_B.absx21;
-  PID_Controller_B.DCMeb[i + 2] = PID_Controller_B.absx11;
-  PID_Controller_B.absx11 = -PID_Controller_B.x[5] / PID_Controller_B.x[8];
-  PID_Controller_B.absx21 = (1.0 - PID_Controller_B.x[7] *
-    PID_Controller_B.absx11) / PID_Controller_B.x[4];
-  PID_Controller_B.DCMeb[p2] = -(PID_Controller_B.x[3] * PID_Controller_B.absx21
-    + PID_Controller_B.x[6] * PID_Controller_B.absx11) / PID_Controller_B.x[0];
-  PID_Controller_B.DCMeb[p2 + 1] = PID_Controller_B.absx21;
-  PID_Controller_B.DCMeb[p2 + 2] = PID_Controller_B.absx11;
-  PID_Controller_B.absx11 = 1.0 / PID_Controller_B.x[8];
-  PID_Controller_B.absx21 = -PID_Controller_B.x[7] * PID_Controller_B.absx11 /
+  PID_Controller_B.DCMeb[i + 1] = PID_Controller_B.absx11;
+  PID_Controller_B.DCMeb[i + 2] = PID_Controller_B.t1;
+  PID_Controller_B.t1 = -PID_Controller_B.x[5] / PID_Controller_B.x[8];
+  PID_Controller_B.absx11 = (1.0 - PID_Controller_B.x[7] * PID_Controller_B.t1) /
     PID_Controller_B.x[4];
-  PID_Controller_B.DCMeb[p3] = -(PID_Controller_B.x[3] * PID_Controller_B.absx21
-    + PID_Controller_B.x[6] * PID_Controller_B.absx11) / PID_Controller_B.x[0];
-  PID_Controller_B.DCMeb[p3 + 1] = PID_Controller_B.absx21;
-  PID_Controller_B.DCMeb[p3 + 2] = PID_Controller_B.absx11;
+  PID_Controller_B.DCMeb[p2] = -(PID_Controller_B.x[3] * PID_Controller_B.absx11
+    + PID_Controller_B.x[6] * PID_Controller_B.t1) / PID_Controller_B.x[0];
+  PID_Controller_B.DCMeb[p2 + 1] = PID_Controller_B.absx11;
+  PID_Controller_B.DCMeb[p2 + 2] = PID_Controller_B.t1;
+  PID_Controller_B.t1 = 1.0 / PID_Controller_B.x[8];
+  PID_Controller_B.absx11 = -PID_Controller_B.x[7] * PID_Controller_B.t1 /
+    PID_Controller_B.x[4];
+  PID_Controller_B.DCMeb[p3] = -(PID_Controller_B.x[3] * PID_Controller_B.absx11
+    + PID_Controller_B.x[6] * PID_Controller_B.t1) / PID_Controller_B.x[0];
+  PID_Controller_B.DCMeb[p3 + 1] = PID_Controller_B.absx11;
+  PID_Controller_B.DCMeb[p3 + 2] = PID_Controller_B.t1;
   if (PID_Controller_U.controller_mode == 1.0) {
     PID_Controller_B.y = PID_Controller_U.DFC_error[0];
     tmp_0 = PID_Controller_U.DFC_error[1];
@@ -226,37 +223,58 @@ void PID_Controller::step()
 
   // End of MATLAB Function: '<S1>/MATLAB Function'
 
-  // Gain: '<S104>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S96>/Filter'
-  //   Gain: '<S94>/Derivative Gain'
-  //   Sum: '<S96>/SumD'
+  // Product: '<S268>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S260>/Filter'
+  //   Inport: '<Root>/PIDN_X'
+  //   Product: '<S258>/DProd Out'
+  //   Sum: '<S260>/SumD'
 
-  PID_Controller_B.FilterCoefficient_n = (2.504 * PID_Controller_B.Sum[3] -
-    PID_Controller_DW.Filter_DSTATE_d) * 54.54;
+  PID_Controller_B.t1 = (PID_Controller_B.Sum[0] * PID_Controller_U.PIDN_X[2] -
+    PID_Controller_DW.Filter_DSTATE) * PID_Controller_U.PIDN_X[3];
 
-  // Sum: '<S110>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S101>/Integrator'
-  //   Gain: '<S106>/Proportional Gain'
+  // Sum: '<S274>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S265>/Integrator'
+  //   Inport: '<Root>/PIDN_X'
+  //   Product: '<S270>/PProd Out'
 
-  PID_Controller_B.absx31 = (4.773 * PID_Controller_B.Sum[3] +
-    PID_Controller_DW.Integrator_DSTATE_j) +
-    PID_Controller_B.FilterCoefficient_n;
+  PID_Controller_B.absx11 = (PID_Controller_B.Sum[0] * PID_Controller_U.PIDN_X[0]
+    + PID_Controller_DW.Integrator_DSTATE) + PID_Controller_B.t1;
 
-  // Gain: '<S158>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S150>/Filter'
-  //   Gain: '<S148>/Derivative Gain'
-  //   Sum: '<S150>/SumD'
+  // Product: '<S322>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S314>/Filter'
+  //   Inport: '<Root>/PIDN_Y'
+  //   Product: '<S312>/DProd Out'
+  //   Sum: '<S314>/SumD'
 
-  PID_Controller_B.FilterCoefficient_c = (3.625 * PID_Controller_B.Sum[4] -
-    PID_Controller_DW.Filter_DSTATE_n) * 54.54;
+  PID_Controller_B.absx21 = (PID_Controller_B.Sum[1] * PID_Controller_U.PIDN_Y[2]
+    - PID_Controller_DW.Filter_DSTATE_m) * PID_Controller_U.PIDN_Y[3];
 
-  // Sum: '<S164>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S155>/Integrator'
-  //   Gain: '<S160>/Proportional Gain'
+  // Sum: '<S328>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S319>/Integrator'
+  //   Inport: '<Root>/PIDN_Y'
+  //   Product: '<S324>/PProd Out'
 
-  PID_Controller_B.DeadZone_l = (6.912 * PID_Controller_B.Sum[4] +
-    PID_Controller_DW.Integrator_DSTATE_l) +
-    PID_Controller_B.FilterCoefficient_c;
+  PID_Controller_B.DeadZone_f = (PID_Controller_U.PIDN_Y[0] *
+    PID_Controller_B.Sum[1] + PID_Controller_DW.Integrator_DSTATE_a) +
+    PID_Controller_B.absx21;
+
+  // Product: '<S214>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S206>/Filter'
+  //   Inport: '<Root>/PIDN_Z'
+  //   Product: '<S204>/DProd Out'
+  //   Sum: '<S206>/SumD'
+
+  PID_Controller_B.absx31 = (PID_Controller_B.Sum[2] * PID_Controller_U.PIDN_Z[2]
+    - PID_Controller_DW.Filter_DSTATE_a) * PID_Controller_U.PIDN_Z[3];
+
+  // Sum: '<S220>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S211>/Integrator'
+  //   Inport: '<Root>/PIDN_Z'
+  //   Product: '<S216>/PProd Out'
+
+  PID_Controller_B.DeadZone_k = (PID_Controller_U.PIDN_Z[0] *
+    PID_Controller_B.Sum[2] + PID_Controller_DW.Integrator_DSTATE_h) +
+    PID_Controller_B.absx31;
 
   // MATLAB Function: '<S2>/Yaw Overshoot Corrector'
   if (PID_Controller_B.Sum[5] > 3.1415926535897931) {
@@ -271,41 +289,64 @@ void PID_Controller::step()
 
   // End of MATLAB Function: '<S2>/Yaw Overshoot Corrector'
 
-  // Gain: '<S210>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S202>/Filter'
-  //   Gain: '<S200>/Derivative Gain'
-  //   Sum: '<S202>/SumD'
+  // Product: '<S52>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S44>/Filter'
+  //   Inport: '<Root>/PIDN_yaw'
+  //   Product: '<S42>/DProd Out'
+  //   Sum: '<S44>/SumD'
 
-  PID_Controller_B.FilterCoefficient_e = (2.957 *
-    PID_Controller_B.corrected_error - PID_Controller_DW.Filter_DSTATE_nq) *
-    114.828;
+  PID_Controller_B.NProdOut_g = (PID_Controller_B.corrected_error *
+    PID_Controller_U.PIDN_yaw[2] - PID_Controller_DW.Filter_DSTATE_h) *
+    PID_Controller_U.PIDN_yaw[3];
 
-  // Gain: '<S50>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S42>/Filter'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Sum: '<S42>/SumD'
+  // Sum: '<S58>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S49>/Integrator'
+  //   Inport: '<Root>/PIDN_yaw'
+  //   Product: '<S54>/PProd Out'
 
-  PID_Controller_B.absx21 = (30.798 * PID_Controller_B.Sum[0] -
-    PID_Controller_DW.Filter_DSTATE[0]) * 17.247;
+  PID_Controller_B.DeadZone_b = (PID_Controller_B.corrected_error *
+    PID_Controller_U.PIDN_yaw[0] + PID_Controller_DW.Integrator_DSTATE_g) +
+    PID_Controller_B.NProdOut_g;
 
-  // End of Outputs for SubSystem: '<Root>/Controller2'
-  PID_Controller_B.st_idx_0 = PID_Controller_B.absx21;
+  // Product: '<S106>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S98>/Filter'
+  //   Inport: '<Root>/PIDN_pitch'
+  //   Product: '<S96>/DProd Out'
+  //   Sum: '<S98>/SumD'
 
-  // Outputs for Atomic SubSystem: '<Root>/Controller2'
-  // Sum: '<S56>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S47>/Integrator'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Gain: '<S50>/Filter Coefficient'
-  //   Gain: '<S52>/Proportional Gain'
+  PID_Controller_B.NProdOut_i = (PID_Controller_U.PIDN_pitch[2] *
+    PID_Controller_B.Sum[4] - PID_Controller_DW.Filter_DSTATE_o) *
+    PID_Controller_U.PIDN_pitch[3];
 
-  PID_Controller_B.absx11 = (18.5 * PID_Controller_B.Sum[0] +
-    PID_Controller_DW.Integrator_DSTATE[0]) + PID_Controller_B.absx21;
+  // Sum: '<S112>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S103>/Integrator'
+  //   Inport: '<Root>/PIDN_pitch'
+  //   Product: '<S108>/PProd Out'
 
-  // End of Outputs for SubSystem: '<Root>/Controller2'
-  PID_Controller_B.ct_idx_0 = PID_Controller_B.absx11;
+  PID_Controller_B.DeadZone_e = (PID_Controller_U.PIDN_pitch[0] *
+    PID_Controller_B.Sum[4] + PID_Controller_DW.Integrator_DSTATE_l) +
+    PID_Controller_B.NProdOut_i;
 
-  // Outputs for Atomic SubSystem: '<Root>/Controller2'
-  // Saturate: '<S54>/Saturation'
+  // Product: '<S160>/NProd Out' incorporates:
+  //   DiscreteIntegrator: '<S152>/Filter'
+  //   Inport: '<Root>/PIDN_roll'
+  //   Product: '<S150>/DProd Out'
+  //   Sum: '<S152>/SumD'
+
+  rtb_NProdOut_h3 = (PID_Controller_U.PIDN_roll[2] * PID_Controller_B.Sum[3] -
+                     PID_Controller_DW.Filter_DSTATE_n) *
+    PID_Controller_U.PIDN_roll[3];
+
+  // Sum: '<S166>/Sum' incorporates:
+  //   DiscreteIntegrator: '<S157>/Integrator'
+  //   Inport: '<Root>/PIDN_roll'
+  //   Product: '<S162>/PProd Out'
+
+  PID_Controller_B.DeadZone_j = (PID_Controller_U.PIDN_roll[0] *
+    PID_Controller_B.Sum[3] + PID_Controller_DW.Integrator_DSTATE_h3) +
+    rtb_NProdOut_h3;
+
+  // Saturate: '<S272>/Saturation'
   if (PID_Controller_B.absx11 > 24.0) {
     PID_Controller_B.y = 24.0;
   } else if (PID_Controller_B.absx11 < -24.0) {
@@ -314,123 +355,77 @@ void PID_Controller::step()
     PID_Controller_B.y = PID_Controller_B.absx11;
   }
 
-  // Gain: '<S50>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S42>/Filter'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Sum: '<S42>/SumD'
-
-  PID_Controller_B.absx21 = (30.798 * PID_Controller_B.Sum[1] -
-    PID_Controller_DW.Filter_DSTATE[1]) * 17.247;
-
-  // End of Outputs for SubSystem: '<Root>/Controller2'
-  PID_Controller_B.st_idx_1 = PID_Controller_B.absx21;
-
-  // Outputs for Atomic SubSystem: '<Root>/Controller2'
-  // Sum: '<S56>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S47>/Integrator'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Gain: '<S50>/Filter Coefficient'
-  //   Gain: '<S52>/Proportional Gain'
-
-  PID_Controller_B.absx11 = (18.5 * PID_Controller_B.Sum[1] +
-    PID_Controller_DW.Integrator_DSTATE[1]) + PID_Controller_B.absx21;
-
-  // End of Outputs for SubSystem: '<Root>/Controller2'
-  PID_Controller_B.ct_idx_1 = PID_Controller_B.absx11;
-
-  // Outputs for Atomic SubSystem: '<Root>/Controller2'
-  // Saturate: '<S54>/Saturation'
-  if (PID_Controller_B.absx11 > 24.0) {
+  // Saturate: '<S326>/Saturation'
+  if (PID_Controller_B.DeadZone_f > 24.0) {
     tmp_0 = 24.0;
-  } else if (PID_Controller_B.absx11 < -24.0) {
+  } else if (PID_Controller_B.DeadZone_f < -24.0) {
     tmp_0 = -24.0;
   } else {
-    tmp_0 = PID_Controller_B.absx11;
+    tmp_0 = PID_Controller_B.DeadZone_f;
   }
 
-  // Gain: '<S50>/Filter Coefficient' incorporates:
-  //   DiscreteIntegrator: '<S42>/Filter'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Sum: '<S42>/SumD'
-
-  PID_Controller_B.absx21 = (30.798 * PID_Controller_B.Sum[2] -
-    PID_Controller_DW.Filter_DSTATE[2]) * 17.247;
-
-  // Sum: '<S56>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S47>/Integrator'
-  //   Gain: '<S40>/Derivative Gain'
-  //   Gain: '<S50>/Filter Coefficient'
-  //   Gain: '<S52>/Proportional Gain'
-
-  PID_Controller_B.absx11 = (18.5 * PID_Controller_B.Sum[2] +
-    PID_Controller_DW.Integrator_DSTATE[2]) + PID_Controller_B.absx21;
-
-  // Saturate: '<S54>/Saturation'
-  if (PID_Controller_B.absx11 > 24.0) {
+  // Saturate: '<S218>/Saturation'
+  if (PID_Controller_B.DeadZone_k > 24.0) {
     tmp = 24.0;
-  } else if (PID_Controller_B.absx11 < -24.0) {
+  } else if (PID_Controller_B.DeadZone_k < -24.0) {
     tmp = -24.0;
   } else {
-    tmp = PID_Controller_B.absx11;
+    tmp = PID_Controller_B.DeadZone_k;
   }
 
-  // Sum: '<S216>/Sum' incorporates:
-  //   DiscreteIntegrator: '<S207>/Integrator'
-  //   Gain: '<S212>/Proportional Gain'
-
-  u0 = (6.782 * PID_Controller_B.corrected_error +
-        PID_Controller_DW.Integrator_DSTATE_h) +
-    PID_Controller_B.FilterCoefficient_e;
   for (p2 = 0; p2 < 3; p2++) {
-    // Product: '<S1>/Maps forces to pwms' incorporates:
+    // SignalConversion generated from: '<S1>/Maps forces to pwms' incorporates:
     //   Product: '<S2>/Matrix Multiply'
+    //   Saturate: '<S218>/Saturation'
+    //   Saturate: '<S272>/Saturation'
+    //   Saturate: '<S326>/Saturation'
 
     PID_Controller_B.rtb_DCMbe_m[p2] = (PID_Controller_B.DCMbe[p2 + 3] * tmp_0 +
       PID_Controller_B.DCMbe[p2] * PID_Controller_B.y) +
       PID_Controller_B.DCMbe[p2 + 6] * tmp;
   }
 
-  // Saturate: '<S108>/Saturation'
-  if (PID_Controller_B.absx31 > 5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[3] = 5.0;
-  } else if (PID_Controller_B.absx31 < -5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[3] = -5.0;
+  // Saturate: '<S164>/Saturation'
+  if (PID_Controller_B.DeadZone_j > 24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[3] = 24.0;
+  } else if (PID_Controller_B.DeadZone_j < -24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[3] = -24.0;
   } else {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[3] = PID_Controller_B.absx31;
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[3] = PID_Controller_B.DeadZone_j;
   }
 
-  // End of Saturate: '<S108>/Saturation'
+  // End of Saturate: '<S164>/Saturation'
 
-  // Saturate: '<S162>/Saturation'
-  if (PID_Controller_B.DeadZone_l > 5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[4] = 5.0;
-  } else if (PID_Controller_B.DeadZone_l < -5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[4] = -5.0;
+  // Saturate: '<S110>/Saturation'
+  if (PID_Controller_B.DeadZone_e > 24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[4] = 24.0;
+  } else if (PID_Controller_B.DeadZone_e < -24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[4] = -24.0;
   } else {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[4] = PID_Controller_B.DeadZone_l;
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[4] = PID_Controller_B.DeadZone_e;
   }
 
-  // End of Saturate: '<S162>/Saturation'
+  // End of Saturate: '<S110>/Saturation'
 
-  // Saturate: '<S214>/Saturation'
-  if (u0 > 5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[5] = 5.0;
-  } else if (u0 < -5.0) {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[5] = -5.0;
+  // Saturate: '<S56>/Saturation'
+  if (PID_Controller_B.DeadZone_b > 24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[5] = 24.0;
+  } else if (PID_Controller_B.DeadZone_b < -24.0) {
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[5] = -24.0;
   } else {
-    // Product: '<S1>/Maps forces to pwms'
-    PID_Controller_B.rtb_DCMbe_m[5] = u0;
+    // SignalConversion generated from: '<S1>/Maps forces to pwms'
+    PID_Controller_B.rtb_DCMbe_m[5] = PID_Controller_B.DeadZone_b;
   }
 
-  // End of Saturate: '<S214>/Saturation'
+  // End of Saturate: '<S56>/Saturation'
   for (i = 0; i < 8; i++) {
     // Product: '<S1>/Maps forces to pwms' incorporates:
     //   Constant: '<S1>/Constant'
@@ -479,37 +474,39 @@ void PID_Controller::step()
     // End of MATLAB Function: '<S1>/PWM Clamping'
   }
 
-  // DeadZone: '<S147>/DeadZone'
-  if (PID_Controller_B.DeadZone_l > 5.0) {
-    PID_Controller_B.DeadZone_l -= 5.0;
-  } else if (PID_Controller_B.DeadZone_l >= -5.0) {
-    PID_Controller_B.DeadZone_l = 0.0;
+  // DeadZone: '<S149>/DeadZone'
+  if (PID_Controller_B.DeadZone_j > 24.0) {
+    PID_Controller_B.DeadZone_j -= 24.0;
+  } else if (PID_Controller_B.DeadZone_j >= -24.0) {
+    PID_Controller_B.DeadZone_j = 0.0;
   } else {
-    PID_Controller_B.DeadZone_l -= -5.0;
+    PID_Controller_B.DeadZone_j -= -24.0;
   }
 
-  // End of DeadZone: '<S147>/DeadZone'
+  // End of DeadZone: '<S149>/DeadZone'
 
-  // Gain: '<S152>/Integral Gain'
-  PID_Controller_B.y = 3.236 * PID_Controller_B.Sum[4];
+  // Product: '<S154>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_roll'
 
-  // Switch: '<S145>/Switch1' incorporates:
-  //   Constant: '<S145>/Clamping_zero'
-  //   Constant: '<S145>/Constant'
-  //   Constant: '<S145>/Constant2'
-  //   RelationalOperator: '<S145>/fix for DT propagation issue'
+  PID_Controller_B.y = PID_Controller_U.PIDN_roll[1] * PID_Controller_B.Sum[3];
 
-  if (PID_Controller_B.DeadZone_l > 0.0) {
+  // Switch: '<S147>/Switch1' incorporates:
+  //   Constant: '<S147>/Clamping_zero'
+  //   Constant: '<S147>/Constant'
+  //   Constant: '<S147>/Constant2'
+  //   RelationalOperator: '<S147>/fix for DT propagation issue'
+
+  if (PID_Controller_B.DeadZone_j > 0.0) {
     tmp_1 = 1;
   } else {
     tmp_1 = -1;
   }
 
-  // Switch: '<S145>/Switch2' incorporates:
-  //   Constant: '<S145>/Clamping_zero'
-  //   Constant: '<S145>/Constant3'
-  //   Constant: '<S145>/Constant4'
-  //   RelationalOperator: '<S145>/fix for DT propagation issue1'
+  // Switch: '<S147>/Switch2' incorporates:
+  //   Constant: '<S147>/Clamping_zero'
+  //   Constant: '<S147>/Constant3'
+  //   Constant: '<S147>/Constant4'
+  //   RelationalOperator: '<S147>/fix for DT propagation issue1'
 
   if (PID_Controller_B.y > 0.0) {
     tmp_2 = 1;
@@ -517,238 +514,285 @@ void PID_Controller::step()
     tmp_2 = -1;
   }
 
-  // Switch: '<S145>/Switch' incorporates:
-  //   Constant: '<S145>/Clamping_zero'
-  //   Constant: '<S145>/Constant1'
-  //   Logic: '<S145>/AND3'
-  //   RelationalOperator: '<S145>/Equal1'
-  //   RelationalOperator: '<S145>/Relational Operator'
-  //   Switch: '<S145>/Switch1'
-  //   Switch: '<S145>/Switch2'
+  // Switch: '<S147>/Switch' incorporates:
+  //   Constant: '<S147>/Clamping_zero'
+  //   Constant: '<S147>/Constant1'
+  //   Logic: '<S147>/AND3'
+  //   RelationalOperator: '<S147>/Equal1'
+  //   RelationalOperator: '<S147>/Relational Operator'
+  //   Switch: '<S147>/Switch1'
+  //   Switch: '<S147>/Switch2'
 
-  if ((PID_Controller_B.DeadZone_l != 0.0) && (tmp_1 == tmp_2)) {
-    PID_Controller_B.DeadZone_l = 0.0;
+  if ((PID_Controller_B.DeadZone_j != 0.0) && (tmp_1 == tmp_2)) {
+    PID_Controller_B.DeadZone_j = 0.0;
   } else {
-    PID_Controller_B.DeadZone_l = PID_Controller_B.y;
+    PID_Controller_B.DeadZone_j = PID_Controller_B.y;
   }
 
-  // End of Switch: '<S145>/Switch'
+  // End of Switch: '<S147>/Switch'
 
-  // DeadZone: '<S93>/DeadZone'
-  if (PID_Controller_B.absx31 > 5.0) {
-    PID_Controller_B.absx31 -= 5.0;
-  } else if (PID_Controller_B.absx31 >= -5.0) {
-    PID_Controller_B.absx31 = 0.0;
+  // DeadZone: '<S95>/DeadZone'
+  if (PID_Controller_B.DeadZone_e > 24.0) {
+    PID_Controller_B.DeadZone_e -= 24.0;
+  } else if (PID_Controller_B.DeadZone_e >= -24.0) {
+    PID_Controller_B.DeadZone_e = 0.0;
   } else {
-    PID_Controller_B.absx31 -= -5.0;
+    PID_Controller_B.DeadZone_e -= -24.0;
   }
 
-  // End of DeadZone: '<S93>/DeadZone'
+  // End of DeadZone: '<S95>/DeadZone'
 
-  // Gain: '<S98>/Integral Gain'
-  PID_Controller_B.y = 2.325 * PID_Controller_B.Sum[3];
+  // Product: '<S100>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_pitch'
 
-  // DeadZone: '<S39>/DeadZone'
-  if (PID_Controller_B.ct_idx_0 > 24.0) {
-    PID_Controller_B.ct_idx_0 -= 24.0;
-  } else if (PID_Controller_B.ct_idx_0 >= -24.0) {
-    PID_Controller_B.ct_idx_0 = 0.0;
-  } else {
-    PID_Controller_B.ct_idx_0 -= -24.0;
-  }
+  PID_Controller_B.y = PID_Controller_U.PIDN_pitch[1] * PID_Controller_B.Sum[4];
 
-  // Gain: '<S44>/Integral Gain'
-  tmp_0 = 2.749 * PID_Controller_B.Sum[0];
+  // Switch: '<S93>/Switch1' incorporates:
+  //   Constant: '<S93>/Clamping_zero'
+  //   Constant: '<S93>/Constant'
+  //   Constant: '<S93>/Constant2'
+  //   RelationalOperator: '<S93>/fix for DT propagation issue'
 
-  // Switch: '<S37>/Switch1' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant'
-  //   Constant: '<S37>/Constant2'
-  //   DeadZone: '<S39>/DeadZone'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue'
-
-  if (PID_Controller_B.ct_idx_0 > 0.0) {
+  if (PID_Controller_B.DeadZone_e > 0.0) {
     tmp_1 = 1;
   } else {
     tmp_1 = -1;
   }
 
-  // Switch: '<S37>/Switch2' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant3'
-  //   Constant: '<S37>/Constant4'
-  //   Gain: '<S44>/Integral Gain'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue1'
+  // Switch: '<S93>/Switch2' incorporates:
+  //   Constant: '<S93>/Clamping_zero'
+  //   Constant: '<S93>/Constant3'
+  //   Constant: '<S93>/Constant4'
+  //   RelationalOperator: '<S93>/fix for DT propagation issue1'
 
-  if (tmp_0 > 0.0) {
+  if (PID_Controller_B.y > 0.0) {
     tmp_2 = 1;
   } else {
     tmp_2 = -1;
   }
 
-  // Switch: '<S37>/Switch' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant1'
-  //   DeadZone: '<S39>/DeadZone'
-  //   Logic: '<S37>/AND3'
-  //   RelationalOperator: '<S37>/Equal1'
-  //   RelationalOperator: '<S37>/Relational Operator'
-  //   Switch: '<S37>/Switch1'
-  //   Switch: '<S37>/Switch2'
+  // Switch: '<S93>/Switch' incorporates:
+  //   Constant: '<S93>/Clamping_zero'
+  //   Constant: '<S93>/Constant1'
+  //   Logic: '<S93>/AND3'
+  //   RelationalOperator: '<S93>/Equal1'
+  //   RelationalOperator: '<S93>/Relational Operator'
+  //   Switch: '<S93>/Switch1'
+  //   Switch: '<S93>/Switch2'
 
-  if ((PID_Controller_B.ct_idx_0 != 0.0) && (tmp_1 == tmp_2)) {
-    tmp_0 = 0.0;
-  }
-
-  // Update for DiscreteIntegrator: '<S47>/Integrator' incorporates:
-  //   Switch: '<S37>/Switch'
-
-  PID_Controller_DW.Integrator_DSTATE[0] += 0.01 * tmp_0;
-
-  // Update for DiscreteIntegrator: '<S42>/Filter' incorporates:
-  //   Gain: '<S50>/Filter Coefficient'
-
-  PID_Controller_DW.Filter_DSTATE[0] += 0.01 * PID_Controller_B.st_idx_0;
-
-  // DeadZone: '<S39>/DeadZone'
-  if (PID_Controller_B.ct_idx_1 > 24.0) {
-    PID_Controller_B.ct_idx_0 = PID_Controller_B.ct_idx_1 - 24.0;
-  } else if (PID_Controller_B.ct_idx_1 >= -24.0) {
-    PID_Controller_B.ct_idx_0 = 0.0;
+  if ((PID_Controller_B.DeadZone_e != 0.0) && (tmp_1 == tmp_2)) {
+    PID_Controller_B.DeadZone_e = 0.0;
   } else {
-    PID_Controller_B.ct_idx_0 = PID_Controller_B.ct_idx_1 - -24.0;
+    PID_Controller_B.DeadZone_e = PID_Controller_B.y;
   }
 
-  // Gain: '<S44>/Integral Gain'
-  tmp_0 = 2.749 * PID_Controller_B.Sum[1];
+  // End of Switch: '<S93>/Switch'
 
-  // Switch: '<S37>/Switch1' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant'
-  //   Constant: '<S37>/Constant2'
-  //   DeadZone: '<S39>/DeadZone'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue'
+  // DeadZone: '<S41>/DeadZone'
+  if (PID_Controller_B.DeadZone_b > 24.0) {
+    PID_Controller_B.DeadZone_b -= 24.0;
+  } else if (PID_Controller_B.DeadZone_b >= -24.0) {
+    PID_Controller_B.DeadZone_b = 0.0;
+  } else {
+    PID_Controller_B.DeadZone_b -= -24.0;
+  }
 
-  if (PID_Controller_B.ct_idx_0 > 0.0) {
+  // End of DeadZone: '<S41>/DeadZone'
+
+  // Product: '<S46>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_yaw'
+
+  PID_Controller_B.y = PID_Controller_B.corrected_error *
+    PID_Controller_U.PIDN_yaw[1];
+
+  // Switch: '<S39>/Switch1' incorporates:
+  //   Constant: '<S39>/Clamping_zero'
+  //   Constant: '<S39>/Constant'
+  //   Constant: '<S39>/Constant2'
+  //   RelationalOperator: '<S39>/fix for DT propagation issue'
+
+  if (PID_Controller_B.DeadZone_b > 0.0) {
     tmp_1 = 1;
   } else {
     tmp_1 = -1;
   }
 
-  // Switch: '<S37>/Switch2' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant3'
-  //   Constant: '<S37>/Constant4'
-  //   Gain: '<S44>/Integral Gain'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue1'
+  // Switch: '<S39>/Switch2' incorporates:
+  //   Constant: '<S39>/Clamping_zero'
+  //   Constant: '<S39>/Constant3'
+  //   Constant: '<S39>/Constant4'
+  //   RelationalOperator: '<S39>/fix for DT propagation issue1'
 
-  if (tmp_0 > 0.0) {
+  if (PID_Controller_B.y > 0.0) {
     tmp_2 = 1;
   } else {
     tmp_2 = -1;
   }
 
-  // Switch: '<S37>/Switch' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant1'
-  //   DeadZone: '<S39>/DeadZone'
-  //   Logic: '<S37>/AND3'
-  //   RelationalOperator: '<S37>/Equal1'
-  //   RelationalOperator: '<S37>/Relational Operator'
-  //   Switch: '<S37>/Switch1'
-  //   Switch: '<S37>/Switch2'
+  // Switch: '<S39>/Switch' incorporates:
+  //   Constant: '<S39>/Clamping_zero'
+  //   Constant: '<S39>/Constant1'
+  //   Logic: '<S39>/AND3'
+  //   RelationalOperator: '<S39>/Equal1'
+  //   RelationalOperator: '<S39>/Relational Operator'
+  //   Switch: '<S39>/Switch1'
+  //   Switch: '<S39>/Switch2'
 
-  if ((PID_Controller_B.ct_idx_0 != 0.0) && (tmp_1 == tmp_2)) {
-    tmp_0 = 0.0;
+  if ((PID_Controller_B.DeadZone_b != 0.0) && (tmp_1 == tmp_2)) {
+    PID_Controller_B.corrected_error = 0.0;
+  } else {
+    PID_Controller_B.corrected_error = PID_Controller_B.y;
   }
 
-  // Update for DiscreteIntegrator: '<S47>/Integrator' incorporates:
-  //   Switch: '<S37>/Switch'
+  // End of Switch: '<S39>/Switch'
 
-  PID_Controller_DW.Integrator_DSTATE[1] += 0.01 * tmp_0;
+  // DeadZone: '<S203>/DeadZone'
+  if (PID_Controller_B.DeadZone_k > 24.0) {
+    PID_Controller_B.DeadZone_k -= 24.0;
+  } else if (PID_Controller_B.DeadZone_k >= -24.0) {
+    PID_Controller_B.DeadZone_k = 0.0;
+  } else {
+    PID_Controller_B.DeadZone_k -= -24.0;
+  }
 
-  // Update for DiscreteIntegrator: '<S42>/Filter' incorporates:
-  //   Gain: '<S50>/Filter Coefficient'
+  // End of DeadZone: '<S203>/DeadZone'
 
-  PID_Controller_DW.Filter_DSTATE[1] += 0.01 * PID_Controller_B.st_idx_1;
+  // Product: '<S208>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_Z'
 
-  // DeadZone: '<S39>/DeadZone'
+  PID_Controller_B.y = PID_Controller_U.PIDN_Z[1] * PID_Controller_B.Sum[2];
+
+  // Switch: '<S201>/Switch1' incorporates:
+  //   Constant: '<S201>/Clamping_zero'
+  //   Constant: '<S201>/Constant'
+  //   Constant: '<S201>/Constant2'
+  //   RelationalOperator: '<S201>/fix for DT propagation issue'
+
+  if (PID_Controller_B.DeadZone_k > 0.0) {
+    tmp_1 = 1;
+  } else {
+    tmp_1 = -1;
+  }
+
+  // Switch: '<S201>/Switch2' incorporates:
+  //   Constant: '<S201>/Clamping_zero'
+  //   Constant: '<S201>/Constant3'
+  //   Constant: '<S201>/Constant4'
+  //   RelationalOperator: '<S201>/fix for DT propagation issue1'
+
+  if (PID_Controller_B.y > 0.0) {
+    tmp_2 = 1;
+  } else {
+    tmp_2 = -1;
+  }
+
+  // Switch: '<S201>/Switch' incorporates:
+  //   Constant: '<S201>/Clamping_zero'
+  //   Constant: '<S201>/Constant1'
+  //   Logic: '<S201>/AND3'
+  //   RelationalOperator: '<S201>/Equal1'
+  //   RelationalOperator: '<S201>/Relational Operator'
+  //   Switch: '<S201>/Switch1'
+  //   Switch: '<S201>/Switch2'
+
+  if ((PID_Controller_B.DeadZone_k != 0.0) && (tmp_1 == tmp_2)) {
+    PID_Controller_B.DeadZone_k = 0.0;
+  } else {
+    PID_Controller_B.DeadZone_k = PID_Controller_B.y;
+  }
+
+  // End of Switch: '<S201>/Switch'
+
+  // DeadZone: '<S311>/DeadZone'
+  if (PID_Controller_B.DeadZone_f > 24.0) {
+    PID_Controller_B.DeadZone_f -= 24.0;
+  } else if (PID_Controller_B.DeadZone_f >= -24.0) {
+    PID_Controller_B.DeadZone_f = 0.0;
+  } else {
+    PID_Controller_B.DeadZone_f -= -24.0;
+  }
+
+  // End of DeadZone: '<S311>/DeadZone'
+
+  // Product: '<S316>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_Y'
+
+  PID_Controller_B.y = PID_Controller_B.Sum[1] * PID_Controller_U.PIDN_Y[1];
+
+  // Switch: '<S309>/Switch1' incorporates:
+  //   Constant: '<S309>/Clamping_zero'
+  //   Constant: '<S309>/Constant'
+  //   Constant: '<S309>/Constant2'
+  //   RelationalOperator: '<S309>/fix for DT propagation issue'
+
+  if (PID_Controller_B.DeadZone_f > 0.0) {
+    tmp_1 = 1;
+  } else {
+    tmp_1 = -1;
+  }
+
+  // Switch: '<S309>/Switch2' incorporates:
+  //   Constant: '<S309>/Clamping_zero'
+  //   Constant: '<S309>/Constant3'
+  //   Constant: '<S309>/Constant4'
+  //   RelationalOperator: '<S309>/fix for DT propagation issue1'
+
+  if (PID_Controller_B.y > 0.0) {
+    tmp_2 = 1;
+  } else {
+    tmp_2 = -1;
+  }
+
+  // Switch: '<S309>/Switch' incorporates:
+  //   Constant: '<S309>/Clamping_zero'
+  //   Constant: '<S309>/Constant1'
+  //   Logic: '<S309>/AND3'
+  //   RelationalOperator: '<S309>/Equal1'
+  //   RelationalOperator: '<S309>/Relational Operator'
+  //   Switch: '<S309>/Switch1'
+  //   Switch: '<S309>/Switch2'
+
+  if ((PID_Controller_B.DeadZone_f != 0.0) && (tmp_1 == tmp_2)) {
+    PID_Controller_B.DeadZone_f = 0.0;
+  } else {
+    PID_Controller_B.DeadZone_f = PID_Controller_B.y;
+  }
+
+  // End of Switch: '<S309>/Switch'
+
+  // DeadZone: '<S257>/DeadZone'
   if (PID_Controller_B.absx11 > 24.0) {
-    PID_Controller_B.ct_idx_0 = PID_Controller_B.absx11 - 24.0;
+    PID_Controller_B.absx11 -= 24.0;
   } else if (PID_Controller_B.absx11 >= -24.0) {
-    PID_Controller_B.ct_idx_0 = 0.0;
+    PID_Controller_B.absx11 = 0.0;
   } else {
-    PID_Controller_B.ct_idx_0 = PID_Controller_B.absx11 - -24.0;
+    PID_Controller_B.absx11 -= -24.0;
   }
 
-  // Gain: '<S44>/Integral Gain'
-  tmp_0 = 2.749 * PID_Controller_B.Sum[2];
+  // End of DeadZone: '<S257>/DeadZone'
 
-  // Switch: '<S37>/Switch1' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant'
-  //   Constant: '<S37>/Constant2'
-  //   DeadZone: '<S39>/DeadZone'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue'
+  // Product: '<S262>/IProd Out' incorporates:
+  //   Inport: '<Root>/PIDN_X'
 
-  if (PID_Controller_B.ct_idx_0 > 0.0) {
+  PID_Controller_B.y = PID_Controller_B.Sum[0] * PID_Controller_U.PIDN_X[1];
+
+  // Switch: '<S255>/Switch1' incorporates:
+  //   Constant: '<S255>/Clamping_zero'
+  //   Constant: '<S255>/Constant'
+  //   Constant: '<S255>/Constant2'
+  //   RelationalOperator: '<S255>/fix for DT propagation issue'
+
+  if (PID_Controller_B.absx11 > 0.0) {
     tmp_1 = 1;
   } else {
     tmp_1 = -1;
   }
 
-  // Switch: '<S37>/Switch2' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant3'
-  //   Constant: '<S37>/Constant4'
-  //   Gain: '<S44>/Integral Gain'
-  //   RelationalOperator: '<S37>/fix for DT propagation issue1'
-
-  if (tmp_0 > 0.0) {
-    tmp_2 = 1;
-  } else {
-    tmp_2 = -1;
-  }
-
-  // Switch: '<S37>/Switch' incorporates:
-  //   Constant: '<S37>/Clamping_zero'
-  //   Constant: '<S37>/Constant1'
-  //   DeadZone: '<S39>/DeadZone'
-  //   Logic: '<S37>/AND3'
-  //   RelationalOperator: '<S37>/Equal1'
-  //   RelationalOperator: '<S37>/Relational Operator'
-  //   Switch: '<S37>/Switch1'
-  //   Switch: '<S37>/Switch2'
-
-  if ((PID_Controller_B.ct_idx_0 != 0.0) && (tmp_1 == tmp_2)) {
-    tmp_0 = 0.0;
-  }
-
-  // Update for DiscreteIntegrator: '<S47>/Integrator' incorporates:
-  //   Switch: '<S37>/Switch'
-
-  PID_Controller_DW.Integrator_DSTATE[2] += 0.01 * tmp_0;
-
-  // Update for DiscreteIntegrator: '<S42>/Filter'
-  PID_Controller_DW.Filter_DSTATE[2] += 0.01 * PID_Controller_B.absx21;
-
-  // Switch: '<S91>/Switch1' incorporates:
-  //   Constant: '<S91>/Clamping_zero'
-  //   Constant: '<S91>/Constant'
-  //   Constant: '<S91>/Constant2'
-  //   RelationalOperator: '<S91>/fix for DT propagation issue'
-
-  if (PID_Controller_B.absx31 > 0.0) {
-    tmp_1 = 1;
-  } else {
-    tmp_1 = -1;
-  }
-
-  // Switch: '<S91>/Switch2' incorporates:
-  //   Constant: '<S91>/Clamping_zero'
-  //   Constant: '<S91>/Constant3'
-  //   Constant: '<S91>/Constant4'
-  //   RelationalOperator: '<S91>/fix for DT propagation issue1'
+  // Switch: '<S255>/Switch2' incorporates:
+  //   Constant: '<S255>/Clamping_zero'
+  //   Constant: '<S255>/Constant3'
+  //   Constant: '<S255>/Constant4'
+  //   RelationalOperator: '<S255>/fix for DT propagation issue1'
 
   if (PID_Controller_B.y > 0.0) {
     tmp_2 = 1;
@@ -756,44 +800,57 @@ void PID_Controller::step()
     tmp_2 = -1;
   }
 
-  // Switch: '<S91>/Switch' incorporates:
-  //   Constant: '<S91>/Clamping_zero'
-  //   Constant: '<S91>/Constant1'
-  //   Logic: '<S91>/AND3'
-  //   RelationalOperator: '<S91>/Equal1'
-  //   RelationalOperator: '<S91>/Relational Operator'
-  //   Switch: '<S91>/Switch1'
-  //   Switch: '<S91>/Switch2'
+  // Switch: '<S255>/Switch' incorporates:
+  //   Constant: '<S255>/Clamping_zero'
+  //   Constant: '<S255>/Constant1'
+  //   Logic: '<S255>/AND3'
+  //   RelationalOperator: '<S255>/Equal1'
+  //   RelationalOperator: '<S255>/Relational Operator'
+  //   Switch: '<S255>/Switch1'
+  //   Switch: '<S255>/Switch2'
 
-  if ((PID_Controller_B.absx31 != 0.0) && (tmp_1 == tmp_2)) {
+  if ((PID_Controller_B.absx11 != 0.0) && (tmp_1 == tmp_2)) {
     PID_Controller_B.y = 0.0;
   }
 
-  // Update for DiscreteIntegrator: '<S101>/Integrator' incorporates:
-  //   Switch: '<S91>/Switch'
+  // Update for DiscreteIntegrator: '<S265>/Integrator' incorporates:
+  //   Switch: '<S255>/Switch'
 
-  PID_Controller_DW.Integrator_DSTATE_j += 0.01 * PID_Controller_B.y;
+  PID_Controller_DW.Integrator_DSTATE += 0.01 * PID_Controller_B.y;
 
-  // Update for DiscreteIntegrator: '<S96>/Filter'
-  PID_Controller_DW.Filter_DSTATE_d += 0.01 *
-    PID_Controller_B.FilterCoefficient_n;
+  // Update for DiscreteIntegrator: '<S260>/Filter'
+  PID_Controller_DW.Filter_DSTATE += 0.01 * PID_Controller_B.t1;
 
-  // Update for DiscreteIntegrator: '<S155>/Integrator'
-  PID_Controller_DW.Integrator_DSTATE_l += 0.01 * PID_Controller_B.DeadZone_l;
+  // Update for DiscreteIntegrator: '<S319>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_a += 0.01 * PID_Controller_B.DeadZone_f;
 
-  // Update for DiscreteIntegrator: '<S150>/Filter'
-  PID_Controller_DW.Filter_DSTATE_n += 0.01 *
-    PID_Controller_B.FilterCoefficient_c;
+  // Update for DiscreteIntegrator: '<S314>/Filter'
+  PID_Controller_DW.Filter_DSTATE_m += 0.01 * PID_Controller_B.absx21;
 
-  // Update for DiscreteIntegrator: '<S207>/Integrator' incorporates:
-  //   Gain: '<S204>/Integral Gain'
+  // Update for DiscreteIntegrator: '<S211>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_h += 0.01 * PID_Controller_B.DeadZone_k;
 
-  PID_Controller_DW.Integrator_DSTATE_h += 2.479 *
-    PID_Controller_B.corrected_error * 0.01;
+  // Update for DiscreteIntegrator: '<S206>/Filter'
+  PID_Controller_DW.Filter_DSTATE_a += 0.01 * PID_Controller_B.absx31;
 
-  // Update for DiscreteIntegrator: '<S202>/Filter'
-  PID_Controller_DW.Filter_DSTATE_nq += 0.01 *
-    PID_Controller_B.FilterCoefficient_e;
+  // Update for DiscreteIntegrator: '<S49>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_g += 0.01 *
+    PID_Controller_B.corrected_error;
+
+  // Update for DiscreteIntegrator: '<S44>/Filter'
+  PID_Controller_DW.Filter_DSTATE_h += 0.01 * PID_Controller_B.NProdOut_g;
+
+  // Update for DiscreteIntegrator: '<S103>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_l += 0.01 * PID_Controller_B.DeadZone_e;
+
+  // Update for DiscreteIntegrator: '<S98>/Filter'
+  PID_Controller_DW.Filter_DSTATE_o += 0.01 * PID_Controller_B.NProdOut_i;
+
+  // Update for DiscreteIntegrator: '<S157>/Integrator'
+  PID_Controller_DW.Integrator_DSTATE_h3 += 0.01 * PID_Controller_B.DeadZone_j;
+
+  // Update for DiscreteIntegrator: '<S152>/Filter'
+  PID_Controller_DW.Filter_DSTATE_n += 0.01 * rtb_NProdOut_h3;
 
   // End of Outputs for SubSystem: '<Root>/Controller2'
 }
